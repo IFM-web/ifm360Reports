@@ -1,0 +1,299 @@
+﻿
+@{
+    ViewData["Title"] = "Visit Report";
+    Layout = "~/Views/Shared/_MainLayout2.cshtml";
+    var dataTable = ViewBag.dt2 as System.Data.DataTable;
+    var dataTable1 = ViewBag.dt as System.Data.DataTable;
+    var dataTable2 = ViewBag.dt1 as System.Data.DataTable;
+    int rowindex = 1;
+}
+
+
+
+<style>
+    .preloader {
+        width: 90px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+
+
+    }
+    
+    #detailstable td,th{
+        border:1px solid black;
+    }
+
+    #data-table td{
+        text-align:center;
+        vertical-align: middle;
+    }
+    #preloaderid{
+
+    }
+
+    #myImg {
+      
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    div#myModal {
+        z-index: 999999;
+    }
+    
+    #myImg:hover {opacity: 0.7;}
+
+</style>
+
+
+
+
+<div class=" container-fluid" id="bdy">
+    <div class="card shadow mt-4" style="">
+        <div class="card-header py-3">
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">Visit Report</h6>
+        </div>
+        <div class="card-body">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document" style="width: fit-content;margin-top: 90px;">
+                    <div class="modal-content" style="margin: 0 auto;">
+                        <div class="modal-header">
+                            <button onclick="rotateImage()" class="btn btn-primary">Rotate</button>
+                            <button type="button" onclick="resetImageRotation()" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img class="modal-content" style="width: 304px;height: 280px;" id="img01">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <input type="hidden" id="txtHiddenId" value="0" />
+                <input type="hidden" id="flgmode" value="ADD" />
+                <input type="hidden" id="UserId" value="@ViewBag" />
+                <input type="hidden" id="txtpagename" value="Visit Report of " />
+                
+               
+               
+             
+
+                @* <div class="preloaderid">  <img class="preloader" style="display:none;" src="/grouplreportingportal/grouplreportingportal/loading-waiting.gif" /></div> *@
+
+                <div class="col-lg-12">
+                    
+                    <button class="btn btn-primary" id="Genratepdf">Export To PDF</button>
+
+                    <a href="/grouplreportingportal/Reports/ConsolidatedVisittoReport" class="btn btn-primary">Back</a>
+                </div>
+                <div id="dataclient" style="width:100%; margin-bottom:10px; " >
+                <table id="detailstable" class="mt-2" style="border:none !important" cellpadding="5" cellspacing="0" width="100%">
+                    <tr>
+                        <th colspan="4" style="text-align: center; font-size: 20px;">Visit Report</th>
+                    </tr>
+                        @foreach (System.Data.DataRow row in dataTable1.Rows)
+                        {
+                            <tr>
+                                <td colspan="2"><strong>Customer Name :</strong> <span id="customername">@row["ClientName"]</span></td>
+                                <td colspan="2" id="sitename1"><strong>Site Name :</strong> <span id="sitename">@row["AsmtName"]</span></td>
+                            </tr>
+                        }
+                      
+                    <tr class="mt-4">
+                        <td colspan="4" style="background-color: #d9edf7;" class="mt-4"><strong>Job Allotment Details :</strong></td>
+                        
+                    </tr>
+                        @foreach (System.Data.DataRow row in dataTable2.Rows)
+                        {
+                            <tr>
+                                <td><strong>Staff Name :</strong> <span id="staffname">@row["EmpName"]</span></td>
+                                <td><strong>Designation :</strong> <span id="designation">@row["Designation"]</span></td>
+                                <td><strong>Visit Date :</strong> <span id="visitdate"></span> @row["VisitDate"]</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="background-color: #d9edf7;"><strong>Client Details :</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Name :</strong> <span id="clientName">@row["ClientName"]</span></td>
+                                <td><strong>Email :</strong> <span id="clientemail"></span>@row["ClientEmail"]</td>
+                                <td><strong>Phone :</strong> <span id="clientphone">@row["ClientPhone"]</span></td>
+
+                            </tr>
+                            <tr>
+                                <td><strong>Designation :</strong>@row["ClientDesignation"] <span id="ClientDesignation"></span></td>
+                                <td><strong>Service Rating :</strong> @row["ClientRating"]<span id="clientrating"></span></td>
+                                <td><strong>Remarks :</strong>@row["ClientRemarks"] <span id="clientremark"></span></td>
+
+                            </tr>
+                        }
+                    
+                    
+                </table>
+                </div>
+                <div class="table-responsive mt-2">
+                    <div class="table table-bordered" id="prindDiv" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+                        <table id="data-table">
+
+                            <thead>
+                                <tr style="background-color: #c84143 !important;">
+
+                                  <th>S.No</th> 
+                                   <th>Check Points Name</th>
+                                   <th>Status</th>
+                                   <th>Remarks</th>
+                                   <th>Image</th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @if (dataTable != null)
+                                {
+                                    @foreach (System.Data.DataRow row in dataTable.Rows)
+                                    {
+                                        <tr>
+                                             <td>@rowindex</td> 
+                                           <td>@row["ChecklistName"]</td>
+                                           <td>@row["Status"]</td>
+                                           <td>@row["Remarks"]</td>
+                                           
+                                            @if (row["VisitImage"] != null && row["VisitImage"] is byte[])
+                                            {
+                                                var base64Image = Convert.ToBase64String((byte[])row["VisitImage"]);
+
+                                                <td> <img onclick="image('data:image/jpeg;base64,@base64Image')" width="100px" height="80px" data-toggle="modal" data-target="#myModal" src="data:image/jpeg;base64,@base64Image" alt="Visit Image" /></td>
+                                            }
+                                            else
+                                            {
+                                                <td><img width="100px" height="80px" src="/NoImage.jpg" /></td>
+                                            }
+                                        </tr>
+                                        rowindex++;
+                                    }
+
+                                }
+                                else
+                                {
+                                    <p>Record not Available</p>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table table-bordered" id="prindDivHid" style="display:none;" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+                        <table id="data-tablehid">
+
+                            <thead>
+                                <tr>
+
+                                    <th>S.No</th>
+                                   <th>Check Points Name</th>
+                                   <th>Status</th>
+                                   <th>Remarks</th>
+                                   <th>Image</th>
+                                </tr>
+                            </thead>
+                            <tbody class="companybody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+                <div id="signature">
+                <div style="display: flex; justify-content: space-evenly; align-items: center;">
+                    <!-- Staff Signature -->
+                    @if (dataTable2 != null)
+                        @foreach (System.Data.DataRow row in dataTable2.Rows)
+                                {
+
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="border: 1px solid black; width: 300px; height: 150px;">
+                                    @if (row["EmpSign"] != null && row["EmpSign"] is byte[])
+                                {
+                                        var base64Image = Convert.ToBase64String((byte[])row["EmpSign"]);
+
+                                        <img id="myImg" style="width: 200px; height: 100px;" src="data:image/jpeg;base64,@base64Image" alt="Visit Image" />
+                                }
+                                else
+                                {
+                                    <img src="./NoImage.jpg" />
+                                }
+                            </div>
+                            <p style="margin-top: 10px;">Staff Signature</p>
+                        </div>
+
+                        <!-- Client Signature -->
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="border: 1px solid black; width: 300px; height: 150px;">
+                                    @if (row["ClientSignature"] != null && row["ClientSignature"] is byte[])
+                                    {
+                                        var base64Image = Convert.ToBase64String((byte[])row["ClientSignature"]);
+
+                                        <img style="width: 200px; height: 100px;" src="data:image/jpeg;base64,@base64Image" alt="Visit Image" />
+                                    }
+                                    else
+                                    {
+                                        <img src="./NoImage.jpg" />
+                                    }
+                            </div>
+                            <p style="margin-top: 10px;">Client Signature</p>
+                        </div>
+                                 
+                                }
+
+                    
+                </div>
+                </div>
+           
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/Reports/VisitReport.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+
+<script src="~/js/Master.js"></script>
+<script src="~/js/InsAjax.js"></script>
+<script src="~/js/xlxs.full.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+

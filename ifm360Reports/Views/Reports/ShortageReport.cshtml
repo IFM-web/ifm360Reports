@@ -1,0 +1,296 @@
+﻿
+@{
+    ViewData["Title"] = "Employee Shortage Report";
+    Layout = "~/Views/Shared/_MainLayout1.cshtml";
+}
+
+
+<style>
+    .preloader {
+        width: 90px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+    }
+
+    .stats-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .stats-box {
+        flex: 1;
+        min-width: 300px;
+        padding: 20px;
+        color: white;
+        text-align: center;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .blue {
+        background-color: #3b8cc7;
+        width:100%;
+        margin: 0 10px;
+    }
+
+    .green {
+        background-color: #28a745;
+    }
+
+    .red {
+        background-color: #dc3545;
+    }
+
+    .purple {
+        background-color: #6f42c1;
+    }
+
+    .orange {
+        background-color: #fd7e14;
+    }
+
+    .pink {
+        background-color: #f8b500;
+    }
+    .late{
+        
+        background-color: #fd1597;
+    }
+</style>
+<div class=" container-fluid" id="bdy">
+    <div class="card shadow mt-4" style="">
+        <div class="card-header py-3">
+            <h6 id="header" class="m-0 font-weight-bold text-primary "> Employee Shortage Report</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <input type="hidden" id="txtHiddenId" value="0" />
+                <input type="hidden" id="flgmode" value="ADD" />
+                <input type="hidden" id="UserId" value="@ViewBag" />
+                <input type="hidden" id="txtpagename" value="Shortage Report " />
+
+
+                <!-- Stats Section -->
+               <div class="stats-box blue">Total Employees – <span id="totalemp"></span> </div>
+                <div class="stats-container mb-4">
+                   
+                    <div class="stats-box green">Total Present – <span id="totalpresent"></span> </div>
+                    <div class="stats-box red">Total Absent – <span id="totalabsent"></span></div>
+                    <div class="stats-box purple">On Leave – <span id="onleave"></span></div>
+                    <div class="stats-box orange">Half Day Working – <span id="hafdwork"></span> </div>
+                    <div class="stats-box late">Late Reporting - <span id="laterep"></span></div>
+                    <div class="stats-box pink">Working Less than Half Day – <span id="wlthafday"></span></div>
+                </div>
+
+                    <div class="col-md-4" id="datafiled">
+                        <div class="form-group">
+                            <label>Date	</label>
+                            <input type="date" class="form-control" id="txtdate" name="Date" />
+
+                        </div>
+                    </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Region</label>
+                        <select class="form-control" id="Regionid" onchange="bindbranchtoreg()">
+                            <option value="All">All</option>
+                            @if (ViewBag.Region != null)
+                            {
+                                foreach (var item in ViewBag.Region as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Branch</label>
+                        <select class="form-control" id="bindBranch">
+                            <option value="All">All</option>
+                         
+                        </select>
+                    </div>
+                </div>
+              
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Client</label>
+                        <select class="form-control" id="Clientid" onchange="bindsitetoclient()">
+                            <option value="All">All</option>
+                            @if (ViewBag.client != null)
+                            {
+                                foreach (var item in ViewBag.client as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Site	</label>
+                        <select class="form-control" id="Siteid">
+                            <option value="All">All</option>
+                            @if (ViewBag.customer != null)
+                            {
+                                foreach (var item in ViewBag.customer as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text (@item.Value)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+              
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Employee Status	</label>
+                        <select class="form-control" id="emptypeid">
+                            <option value="All">All</option>
+                            <option value="Present">Present</option>
+                            <option value="Absent">Absent</option>
+                            <option value="Leave">Leave</option>
+                            <option value="Half">Half</option>
+                            <option value="Late">Late</option>
+                            <option value="Absent as Working Less than 4.5Hrs">Absent as Working Less than 4.5Hrs</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-primary" onclick="SearchData()">View</button>
+                    <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
+                    <button class="btn btn-primary" id="Genratepdf">Export To PDF</button>
+                   
+                </div>
+
+
+                <div class="table-responsive mt-2">
+                    <div class="table table-bordered" id="prindDiv" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+                        <table id="data-table">
+
+                            <thead>
+                                <tr style="background-color: #c84143 !important;">
+                                    <th>S.No</th>
+                                    <th>Region</th>
+                                    <th>Branch</th>
+                                    <th>Client Name</th>
+                                    <th>Site Name</th>
+                                    <th>Employee Code</th>
+                                    <th>Employee Name</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Shift</th>
+                                    <th>In Time</th>
+                                    <th>Out Time</th>
+                                    <th>Duty Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody class="companybody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table table-bordered" id="prindDivHid" style="display:none;" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+
+                        <table id="data-tablehid">
+
+                            <thead>
+                          
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Region</th>
+                                    <th>Branch</th>
+                                    <th>Client Name</th>
+                                    <th>Site Name</th>
+                                    <th>Employee Code</th>
+                                    <th>Employee Name</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Shift</th>
+                                    <th>In Time</th>
+                                    <th>Out Time</th>
+                                    <th>Duty Hours</th>
+                                </tr>
+
+
+
+                               
+                            </thead>
+
+                            <tbody class="companybody">
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+<script src="~/js/reports/ShortageReport.js"></script>
+<script src="~/js/Master.js"></script>
+<script src="~/js/InsAjax.js"></script>
+<script src="~/js/xlxs.full.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+

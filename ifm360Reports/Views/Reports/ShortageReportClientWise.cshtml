@@ -1,0 +1,255 @@
+﻿
+@{
+    ViewData["Title"] = "Site Shortage Report";
+    Layout = "~/Views/Shared/_MainLayout1.cshtml";
+}
+
+<style>
+    .preloader {
+        width: 90px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+    }
+
+   
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+   
+
+    .stat-item {
+
+        text-align: center;
+        padding: 15px;
+      
+        font-size: 1em;
+        color: white;
+        border-radius: 8px;
+        margin: 8px 10px;
+    }
+
+    .total-sites {
+        background-color: #ffa500;
+    }
+
+    .reported-sites {
+        background-color: #008000;
+    }
+
+    .vacant-sites {
+        background-color: #ff0000;
+    }
+
+    .status-green {
+        color: green;
+    }
+
+    .status-red {
+        color: red;
+    }
+</style>
+<div class=" container-fluid" id="bdy">
+    <div class="card shadow mt-4" style="">
+        <div class="card-header py-3">
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">Site Shortage Report</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <input type="hidden" id="txtHiddenId" value="0" />
+                <input type="hidden" id="flgmode" value="ADD" />
+                <input type="hidden" id="UserId" value="@ViewBag" />
+                <input type="hidden" id="txtpagename" value="Site Shortage Report" />
+
+
+
+
+                <div class="col-lg-12">
+                   <div class="row mb-4">
+                        <div class="col-md-3 stat-item total-sites">Total Sites - <span id="totalside"></span></div>
+                        <div class="col-md-3 stat-item reported-sites">Total Sites Reported - <span id="totalsiteResp"></span></div>
+                        <div class="col-md-3 stat-item vacant-sites">Total Sites Vacant - <span id="totalsitevact"></span></div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" id="datafiled">
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" class="form-control" id="txtdate" name="Date" />
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Region</label>
+                        <select class="form-control" id="Regionid"">
+                            <option value="All">All</option>
+                            @if (ViewBag.Region != null)
+                            {
+                                foreach (var item in ViewBag.Region as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Client</label>
+                        <select class="form-control" id="Clientid">
+                            <option value="All">All</option>
+                            @if (ViewBag.client != null)
+                            {
+                                foreach (var item in ViewBag.client as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="shift">Select Shift:</label>
+                        <select class="form-control" id="Shiftid">
+                           
+                            @if (ViewBag.Shift != null)
+                            {
+                                foreach (var item in ViewBag.Shift as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+
+
+
+               
+
+                <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-primary" onclick="SearchData()">View Shortage</button>
+                    <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
+                    <button class="btn btn-primary" id="Genratepdf">Export To PDF</button>
+
+                </div>
+
+
+                <div class="table-responsive mt-2">
+                    <div class="table table-bordered" id="prindDiv" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+                        <table id="data-table">
+
+                            <thead>
+                                <tr style="background-color: #c84143 !important;">
+                                    <th>S.No</th>
+                                    <th>Region</th>
+                                    <th>Branch</th>
+                                    <th>Client Name</th>
+                                    <th>Site Name</th>
+                                    <th>Area Incharge</th>
+                                    <th>Date</th>
+                                    <th>Shift</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="companybody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table table-bordered" id="prindDivHid" style="display:none;" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+
+                        <table id="data-tablehid">
+
+                            <thead>
+
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Region</th>
+                                    <th>Branch</th>
+                                    <th>Client Name</th>
+                                    <th>Site Name</th>
+                                    <th>Area Incharge</th>
+                                    <th>Date</th>
+                                    <th>Shift</th>
+                                    <th>Status</th>
+                                </tr>
+
+
+
+
+                            </thead>
+
+                            <tbody class="companybody">
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+<script src="~/js/reports/ShortageReportClientWise.js"></script>
+<script src="~/js/Master.js"></script>
+<script src="~/js/InsAjax.js"></script>
+<script src="~/js/xlxs.full.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

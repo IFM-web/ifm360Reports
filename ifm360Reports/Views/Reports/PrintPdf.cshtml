@@ -1,0 +1,402 @@
+﻿
+@{
+    ViewData["Title"] = "PrintPdf";
+    Layout = null;
+	var dataTable = ViewBag.dt as System.Data.DataTable;
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="icon" type="image/x-icon" href="~/ifm.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
+<!-- Our Custom CSS -->
+<link rel="stylesheet" href="~/css/Styleee.css" />
+
+<!-- Font Awesome JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
+<script src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+
+<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+
+<style>
+	/* Toggle Styles */
+	.navbar-light .navbar-nav .nav-link {
+		width: 85px;
+	}
+
+	.nav-pills > li > a {
+		border-radius: 0;
+	}
+
+	.form-group input[type=checkbox], .form-group input[type=radio] {
+		box-sizing: border-box;
+		padding: 0;
+		width: auto;
+	}
+
+	table.dataTable tr.even td.sorting_1, table.dataTable tr.odd td.sorting_1 {
+		background-color: #ffffff00 !important;
+	}
+
+	.valname {
+		margin-top: -51px;
+		/* margin-bottom: 1rem; */
+		padding-top: 51px;
+		position: absolute;
+		float: left;
+	}
+
+	.h5, h5 {
+		font-size: 1.25rem;
+		height: 30px;
+		padding: 5px;
+		/*width: 874px;*/
+		text-transform: uppercase;
+		width: 100%;
+		background-color: #6d7fcc;
+		color: white;
+	}
+
+	#wrapper {
+		padding-left: 0;
+		-webkit-transition: all 0.5s ease;
+		-moz-transition: all 0.5s ease;
+		-o-transition: all 0.5s ease;
+		transition: all 0.5s ease;
+		overflow: hidden;
+	}
+
+		#wrapper.toggled {
+			padding-left: 250px;
+			overflow: hidden;
+		}
+
+
+
+			#wrapper.toggled #sidebar-wrapper {
+				width: 250px;
+			}
+
+	#page-content-wrapper {
+		position: absolute;
+		padding: 15px;
+		width: 100%;
+		overflow-x: hidden;
+	}
+
+	.xyz {
+		min-width: 360px;
+	}
+
+	#wrapper.toggled #page-content-wrapper {
+		position: relative;
+		margin-right: 0px;
+	}
+
+	.fixed-brand {
+		width: auto;
+	}
+
+	.fixTableHead {
+		overflow-y: auto;
+		height: 500px;
+	}
+
+		.fixTableHead tr th {
+			position: sticky;
+			top: 0;
+		}
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	th,
+	td {
+		/*padding: 8px 15px;*/
+		border: 2px solid black;
+	}
+
+	th {
+		/*background: #ABDD93;*/
+	}
+
+	/* Sidebar Styles */
+
+
+
+
+
+
+	.sidebar-nav li a:active,
+	.sidebar-nav li a:focus {
+		text-decoration: none;
+	}
+
+	ul#menu {
+		padding: 0px;
+		list-style-type: none;
+	}
+
+	.sidebar-nav > .sidebar-brand {
+		height: 65px;
+		font-size: 18px;
+		line-height: 60px;
+	}
+
+		.sidebar-nav > .sidebar-brand a {
+			color: #999999;
+		}
+
+			.sidebar-nav > .sidebar-brand a:hover {
+				color: #fff;
+				background: none;
+			}
+
+	.no-margin {
+		margin: 0;
+	}
+
+	@@media(min-width:768px) {
+		#wrapper {
+			padding-left: 250px;
+		}
+
+		.fixed-brand {
+			width: 250px;
+		}
+
+		#wrapper.toggled {
+			padding-left: 0;
+		}
+
+		#sidebar-wrapper {
+			width: 250px;
+		}
+
+		#wrapper.toggled #sidebar-wrapper {
+			width: 250px;
+		}
+
+		#wrapper.toggled-2 #sidebar-wrapper {
+			width: 50px;
+		}
+
+			#wrapper.toggled-2 #sidebar-wrapper:hover {
+				width: 250px;
+			}
+
+		#page-content-wrapper {
+			padding: 20px;
+			position: relative;
+			-webkit-transition: all 0.5s ease;
+			-moz-transition: all 0.5s ease;
+			-o-transition: all 0.5s ease;
+			transition: all 0.5s ease;
+		}
+
+		#wrapper.toggled #page-content-wrapper {
+			position: relative;
+			margin-right: 0;
+			padding-left: 250px;
+		}
+
+		#wrapper.toggled-2 #page-content-wrapper {
+			position: relative;
+			margin-right: 0;
+			margin-left: -200px;
+			-webkit-transition: all 0.5s ease;
+			-moz-transition: all 0.5s ease;
+			-o-transition: all 0.5s ease;
+			transition: all 0.5s ease;
+			width: auto;
+		}
+	}
+
+	.nav-stacked {
+		padding: 0px;
+	}
+
+		.nav-stacked li ul a {
+			background: #182d87;
+			border-bottom: 1px dotted;
+		}
+
+	#bdy {
+		margin-top: 62px;
+	}
+
+	#data-table thead tr th {
+		background-color: #50859e;
+		color: #fff;
+	}
+
+	#data-table thead th {
+		border: 1px solid white;
+	}
+
+
+	th {
+		background-color: #c84143;
+		color: #fff;
+	}
+
+	#header {
+		text-transform: uppercase;
+	}
+
+	.ma_width {
+		overflow: scroll;
+	}
+
+	.branchbtn {
+		margin: 5px;
+		border-radius: 16px;
+		background: #c84143 !important;
+		color: white;
+		padding: 5px 16px;
+	}
+
+</style>
+
+<style>
+    .preloader {
+        width: 90px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+    }
+
+    .stats-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .stats-box {
+        flex: 1;
+        min-width: 300px;
+        padding: 20px;
+        color: white;
+        text-align: center;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .blue {
+        background-color: #3b8cc7;
+        width:100%;
+        margin: 0 10px;
+    }
+
+    .green {
+        background-color: #28a745;
+    }
+
+    .red {
+        background-color: #dc3545;
+    }
+
+    .purple {
+        background-color: #6f42c1;
+    }
+
+    .orange {
+        background-color: #fd7e14;
+    }
+
+    .pink {
+        background-color: #f8b500;
+    }
+    .late{
+
+        background-color: #fd1597;
+    }
+</style>
+
+<div class=" container-fluid" id="printbody">
+  
+	<div class="table-responsive mt-2">
+		<div class="table table-bordered" id="prindDiv" width="100%" cellspacing="0">
+			@*    <style>
+			table, th, td {
+			border: 1px solid black;
+			border-collapse: collapse;
+			text-align:center;
+
+			}
+
+
+			</style> *@
+			<table id="data-table">
+
+				<thead>
+					<tr style="background-color: #c84143 !important;">
+						@* <th>Action</th> *@
+						<th>S.No</th>
+						<th>Client Name</th>
+						<th>Site Name</th>
+						<th>Emp Code</th>
+						<th>Emp Name</th>
+						<th>Designation</th>
+						<th>Shift Details</th>
+						<th>Date</th>
+						<th>In Time</th>
+						<th>Out Time</th>
+						<th>Working Minutes</th>
+						<th>Emp Image</th>
+
+
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (System.Data.DataRow item in dataTable.Rows)
+				{
+					<tr>
+							<td>@item["ClientName"]</td>
+							<td>@item["AsmtName"]</td>
+							<td>@item["EmployeeCode"]</td>
+							<td>@item["EmployeeName"]</td>
+							<td>@item["Designation"]</td>
+							<td>@item["ShiftDetails"]</td>
+							<td>@item["InTime"]</td>
+							<td>@item["OutTime"]</td>
+							<td>@item["TotalMin"]</td>
+					</tr>
+				}
+				</tbody>
+			</table>
+		</div>
+
+</div>
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+<script src="~/js/reports/AttendanceSuper2.js"></script>
+<script src="~/js/Master.js"></script>
+<script src="~/js/InsAjax.js"></script>
+<script src="~/js/xlxs.full.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewData["Title"] = "Consolidated Visit Report";
+    Layout = "~/Views/Shared/_MainLayout2.cshtml";
+}
+
+<style>
+    .preloader {
+        width: 90px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+    }
+</style>
+<div class=" container-fluid" id="bdy">
+    <div class="card shadow mt-4" style="">
+        <div class="card-header py-3">
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">Consolidated Visit Report</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <input type="hidden" id="txtHiddenId" value="0" />
+                <input type="hidden" id="flgmode" value="ADD" />
+                <input type="hidden" id="UserId" value="@ViewBag" />
+                <input type="hidden" id="txtpagename" value="Consolidated Visit Report " />
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>From Date</label>
+                        <input type="date" class="form-control" id="txtfromdate" name="Date" />
+
+                    </div>
+                </div>
+
+                <div class="col-md-4" id="datafiled">
+                    <div class="form-group">
+                        <label>To Date	</label>
+                        <input type="date" class="form-control" id="txttodate" name="Date" />
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Region</label>
+                        <select class="form-control" id="Regid">
+                            @* <option value="All">All</option> *@
+                            @if (ViewBag.Region != null)
+                            {
+                                foreach (var item in ViewBag.Region as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Client	</label>
+                        <select class="form-control" id="custid">
+                            @* <option value="All">All</option> *@
+                            @if (ViewBag.customer != null)
+                            {
+                                foreach (var item in ViewBag.customer as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text (@item.Value)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-primary" onclick="SearchData2()">View</button>
+                    <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
+                    <button class="btn btn-primary" id="Genratepdf">Export To PDF</button>
+                </div>
+
+
+                <div class="table-responsive mt-2">
+                    <div class="table table-bordered" id="prindDiv" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+                        <table id="data-table">
+
+                            <thead>
+                                <tr style="background-color: #c84143 !important;">
+                                    @* <th>Action</th> *@
+                                    <th id="btn"> View Detailed Report</th>
+                                    <th>S.No</th>
+                                    <th>Zone</th>
+                                    <th>Branch</th>
+                                    <th>Customer Name</th>
+                                    <th>Site Name</th>
+                                    <th>Client Name</th>
+                                    <th>Client Designation</th>
+                                    <th>Client Phone</th>
+                                    <th>Client Email</th>
+                                    <th>Client Rating</th>
+                                    <th>Client Remarks</th>
+                                    <th>Visit Date</th>
+                                    <th>Technician Id</th>
+                                    <th>Technician Name</th>
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody class="companybody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table table-bordered" id="prindDivHid" style="display:none;" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+
+                        <table id="data-tablehid">
+
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Zone</th>
+                                    <th>Branch</th>
+                                    <th>Customer Name</th>
+                                    <th>Site Name</th>
+                                    <th>Client Name</th>
+                                    <th>Client Designation</th>
+                                    <th>Client Phone</th>
+                                    <th>Client Email</th>
+                                    <th>Client Rating</th>
+                                    <th>Client Remarks</th>
+                                    <th>Visit Date</th>
+                                    <th>Technician Id</th>
+                                    <th>Technician Name</th>
+
+
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="companybody2">
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script src="~/js/reports/customerfeedbackreport.js"></script>
+@* <script src="~/grouplreportingportal/js/reports/VisitReport.js"></script> *@
+<script src="~/js/Master.js"></script>
+<script src="~/js/InsAjax.js"></script>
+<script src="~/js/xlxs.full.min.js"></script>
+
+
+
+
+
+
+
+
+
+

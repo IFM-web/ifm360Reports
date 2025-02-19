@@ -1,0 +1,126 @@
+﻿@model ifm360Reports.Models.branch_login;
+
+@{
+    ViewData["Title"] = "Branch Login";
+    
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .login-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 400px;
+        margin:auto;
+    }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .login-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #666;
+            text-align: left;
+        }
+
+        .login-container select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #f7f7f7;
+        }
+
+
+        .login-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+            .login-container button:hover {
+                background-color: #45a049;
+            }
+
+    #btnlogout {
+          margin-top:-50px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+           float:right;
+            cursor: pointer;
+            text-decoration:none;
+        }
+
+    #btnlogout:hover {
+                background-color: #45a049;
+            }
+
+</style>
+
+<a id="btnlogout" type="button" asp-controller="Home" asp-action="Logout" style="background-color:#ce2634 !important; color:white !important; margin-top:-30px;">Logout</a>
+<div class="login-container">
+    <h2>Branch Login</h2>
+    <form method="post">
+        <label for="company">Company</label>
+
+        <select class="form-control" id="company" asp-for="companyid" onchange="bindRegion(this.value)">
+
+            @if (ViewBag.Company != null)
+                {
+                
+                foreach (var item in ViewBag.Company)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+       
+
+        <label for="region">Region</label>
+        <select class="form-control" id="regiondiv" asp-for="location_id"  onchange="bindbranch(this.value)">
+           
+        </select>
+
+        <label for="branch">Branch</label>
+        <select class="form-control" id="branch"  asp-for="branch_id">
+            
+        </select>
+
+        <button type="submit" id="continue" style="background-color:#ce2634 !important; color:white !important;">Continue</button>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<script src="~/js/Reports/BranchLogin.js"></script>
+<script >
+
+    var message = '@ViewBag.message';
+    if (message)
+        alert(message)
+</script>
+
+
