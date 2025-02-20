@@ -1,16 +1,9 @@
 ﻿
-
- 
 @{
-    ViewData["Title"] = "Appointment Letter Acceptance Report";
+    ViewData["Title"] = "Consolidated Uniform Report";
     Layout = "~/Views/Shared/_MainLayout1.cshtml";
+}
 
-
-
-
-    }
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
     .preloader {
         width: 90px;
@@ -18,17 +11,20 @@
         top: 50%;
         left: 50%;
     }
+    table tr td {
+        text-align:center;
+    }
 </style>
 
 <div class=" container-fluid" id="bdy">
     <div class="card shadow mt-4" style="">
         <div class="card-header py-3">
-          
-            <h6 id="header" class="m-0 font-weight-bold text-primary ">Appointment Letter Acceptance Report</h6>
+
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">Consolidated Uniform Reportt</h6>
         </div>
         <div class="card-body">
 
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="myModal" style="z-index:9999;" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="100" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document" style="width: fit-content;margin-top: 90px;">
                     <div class="modal-content" style="margin: 0 auto;">
                         <div class="modal-header">
@@ -48,15 +44,13 @@
                 <input type="hidden" id="txtHiddenId" value="0" />
                 <input type="hidden" id="flgmode" value="ADD" />
                 <input type="hidden" id="UserId" value="@ViewBag" />
-                <input type="hidden" id="txtpagename" value="AppointmentLetterAcceptanceReport"/>
+                <input type="hidden" id="txtpagename" value="AppointmentLetterAcceptanceReport" />
 
-
-
-                 <div class="col-md-4">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Select Company</label>
                         <select class="form-control" id="CompanyCodeid" onchange="loadGridData(this.value)">
-                      
+
 
 
 
@@ -73,37 +67,7 @@
                 </div>
 
 
-               @*  <div class="col-md-4" id="datafiled">
-                    <div class="form-group">
-                        <label for="fromDate" class="form-label">From Date</label>
-                        <input type="date" class="form-control" id="txtfromdate" name="Date" onchange="SearchData()" />
 
-                    </div>
-                </div>
- *@
-              @*   <div class="col-md-4" id="datafiled">
-                    <div class="form-group">
-                        <label for="txttoDate" class="form-label">To Date</label>
-                        <input type="date" class="form-control" id="txttoDate" name="Date" onchange="SearchData()" />
-
-                    </div>
-                </div> *@
-               
-               @*  <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Select Client</label>
-                        <select class="form-control" id="custid" onchange="SearchData()">
-                            <option value="All">All</option>
-                            @if (ViewBag.customer != null)
-                            {
-                                foreach (var item in ViewBag.customer as List<SelectListItem>)
-                                {
-                                    <option value="@item.Value">@item.Text (@item.Value)</option>
-                                }
-                            }
-                        </select>
-                    </div>
-                </div> *@
 
                 <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
 
@@ -116,16 +80,8 @@
 
                 <div class="table-responsive mt-2">
                     <div class="table table-bordered" id="tableid" width="100%" cellspacing="0">
-                        @*    <style>
-                table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-                text-align:center;
+                  
 
-                }
-
-
-                </style> *@
                         <table id="data-table">
 
                             <thead>
@@ -133,38 +89,41 @@
                                     @* <th>Action</th> *@
                                     <th>S.No</th>
                                     <th>Company Name</th>
-                                   <th>Region</th>
-                                    <th>Branch</th>
-                                   <th>Employee Code</th>
-                                  <th>Employee Name</th>
-                                 <th>Approval Date</th>
-
-
+                                    <th>Employee Code</th>
+                                    <th>Employee Name</th>
+                                    <th>Date</th>
+                                    <th>Item 1</th>
+                                    <th>Item 2</th>
+                                    <th>Item 3</th>
+                                    <th>Item 4</th>
+                                    <th>Item 5</th>
+                                    <th>Item 6</th>
+                                    <th>Item 7</th>
 
                                 </tr>
                             </thead>
-                            <tbody class="AppointmentLetterAcceptance">
+                            <tbody class="databody">
                             </tbody>
                         </table>
                     </div>
 
-            
-                    </div>
-                </div>
 
+                </div>
             </div>
+
         </div>
     </div>
+</div>
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<script src="~/js/Reports/AppointmentLetterAcceptanceReport.js"></script>
+<script src="~/js/IFMReports/Uniformacceptance.js"></script>
 <script src="~/js/Master.js"></script>
 
 <script src="~/js/xlxs.full.min.js"></script>
 <script>
-        
-    
+
+
     function exportexcel(type, fn, dl) {
         var ddd = $("#txtpagename").val();
         var elt = document.getElementById('data-table');
@@ -190,4 +149,6 @@
 
 
 
-    
+
+
+
