@@ -25,7 +25,7 @@ document.getElementById("pdfid").addEventListener("click", () => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AppointmentLetterAcceptanceReport ${companyName}</title>
+    <title>Consolidated Uniform Report ${companyName}</title>
 
     <style>
         * {
@@ -256,13 +256,15 @@ document.getElementById("pdfid").addEventListener("click", () => {
             <div class="header1">
                  <img src="https://ifm360.in/grouplreportingportal/GroupL.jfif" alt="Group L Logo" class="logo">
                 <p style="margin-top:-20px;">3rd Floor, w31, Okhla Industrial Area Phase 2 <br /> New Delhi 110020 </p>
-                <h1 style='text-align: center;' id="myhid">AppointmentLetterAcceptanceReport ${companyName} </h1>
+                <h1 style='text-align: center;' id="myhid">Consolidated Uniform Report ${companyName} </h1>
             </div>
 
         </div>
           </div>
         </body>
+
 </html>
+
 `;
 
 
@@ -272,7 +274,7 @@ document.getElementById("pdfid").addEventListener("click", () => {
 
     var datadiv = document.getElementById("tableid");
     const hideFrame = document.createElement("iframe");
-    
+
     var popupwin = window.open();
 
     popupwin.document.write(content1 + datadiv.innerHTML);
@@ -284,14 +286,13 @@ document.getElementById("pdfid").addEventListener("click", () => {
         popupwin.close();
     }
 });
-function loadGridData()
-{
+function loadGridData() {
     $(".preloader").show();
     var Company = $("#CompanyCodeid").val();
 
 
     $.ajax({
-        url: myurl + '/IFMReport/getUnifromAccetance',
+        url: myurl + '/IFMReport/getConsolidatedUniform',
         type: 'GET',
         data: {
             Company: Company
@@ -305,11 +306,18 @@ function loadGridData()
                 for (var i = 0; i < Data.length; i++) {
                     var row = '<tr>';
                     row += '<td>' + sno++ + '</td>';
-                    row += '<td>' + Data[i].Company + '</td>';
-                    row += '<td>' + Data[i].EmpCode + '</td>';                   
+                    row += '<td>' + Data[i].CompanyCode + '</td>';
+                    row += '<td>' + Data[i].EmpCode + '</td>';
                     row += '<td>' + Data[i].EmpName + '</td>';
-                    row += '<td>' + Data[i].Date + '</td>';
-                    row += '<td> <button class="btn btn-danger"  data-toggle="modal" data-target="#exampleModalCenter" onclick=ShowModel(' + Data[i].Itemno + ',"' + Data[i].EmpCode +'") >Item (' + Data[i].Itemno +')</button></td>';
+                    row += '<td>' + Data[i].Trouser + '</td>';
+                    row += '<td>' + Data[i].Shirt + '</td>';
+                    row += '<td>' + Data[i]['Cap/Tie'] + '</td>';
+                    row += '<td>' + Data[i]['Belt'] + '</td>';
+                    row += '<td>' + Data[i]['Whistle/Dori'] + '</td>';
+                    row += '<td>' + Data[i]['Shoes'] + '</td>';
+                    row += '<td>' + Data[i]['Id Card'] + '</td>';
+                  
+                
                     row += '</tr>';
                     $('#data-table tbody').append(row);
                 }
@@ -328,53 +336,5 @@ function loadGridData()
 
 }
 
-function ShowModel(LocId, EmpCode) {
-    $.ajax({
-        url: myurl + '/IFMReport/getUnifromDetails',
-        type: 'Post',
-        data: { LocId: LocId, EmpCode: EmpCode },
-        success: function (data) {
-            var data = JSON.parse(data);
-            let row = '';
-            for (let item of data) {
-                var url = 'data:image/jpeg;base64,' + item.Photo
-                row += `<tr>
-                <td>${item.UniformItem}</td>
-                <td> <img data-toggle='modal' data-target='#myModal' style="width: 100px;height: 100px;" onclick='image("${url}")' src='${url}'/></td>
-                
-                </tr > `;
-            }
-
-            $("#databody").empty();
-            $("#databody").append(row);
-
-        },
-        error: function (err) {
-            alert(err.massage);
-        }
-    });
-}
 
 
-function image(id) {
-    $("#img01").attr("src", id);
-    //$(".modal-body").css("backgroundImage", "url(" + id + ")"); 
-
-
-}
-
-
-var angle = 0;
-function rotateImage() {
-
-    angle += 90;
-    var image = document.getElementById('img01');
-    image.style.transform = 'rotate(' + angle + 'deg)';
-}
-
-function resetImageRotation() {
-    angle = 0;
-    var image = document.getElementById('img01');
-    image.style.transform = 'rotate(0deg)';
-}
-  

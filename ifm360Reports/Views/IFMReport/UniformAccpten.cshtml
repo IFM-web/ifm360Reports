@@ -33,7 +33,7 @@
         </div>
         <div class="card-body">
 
-            <div class="modal fade" id="myModal" style="z-index:9999;" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="100" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="myModal" style="z-index:9999;" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document" style="width: fit-content;margin-top: 90px;">
                     <div class="modal-content" style="margin: 0 auto;">
                         <div class="modal-header">
@@ -53,13 +53,13 @@
                 <input type="hidden" id="txtHiddenId" value="0" />
                 <input type="hidden" id="flgmode" value="ADD" />
                 <input type="hidden" id="UserId" value="@ViewBag" />
-                <input type="hidden" id="txtpagename" value="AppointmentLetterAcceptanceReport" />
+                <input type="hidden" id="txtpagename" value="Uniform Acceptance Report" />
 
           
 
                 <!-- Modal -->
-                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" style="overflow-y:scroll" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" style="margin-top:5rem;" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h6 class="modal-title" id="exampleModalLongTitle">Item Details</h6>
@@ -73,8 +73,8 @@
                                     <thead>
                                         <tr style="background-color: #c84143 !important;">
                                         
-                                            <th align="center">Item Name</th>
-                                            <th align="center">Photo</th>
+                                            <th class="text-center">Item Name</th>
+                                            <th class="text-center">Photo</th>
 
 
 
@@ -119,8 +119,8 @@
 
                 <div class="col-lg-12">
                     @* <button class="btn btn-primary" onclick="SearchData()">View Shortage</button> *@
-                    <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
-                    <button class="btn btn-primary" id="pdfid">Export To PDF</button>
+                @*     <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
+                    <button class="btn btn-primary" id="pdfid">Export To PDF</button> *@
 
                 </div>
 
