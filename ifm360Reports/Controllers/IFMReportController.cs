@@ -41,7 +41,7 @@ namespace ifm360Reports.Controllers
 	#endregion
 
 	public IActionResult ConsolidatedUniform()
-		{
+	{
             var companyListJson = HttpContext.Session.GetString("CompanyList");
             List<SelectListItem> companyList = null;
             if (!string.IsNullOrEmpty(companyListJson))
@@ -50,10 +50,7 @@ namespace ifm360Reports.Controllers
             }
             ViewBag.Company = companyList;
             return View();
-        }
-
-	
-    
+    }
 
     public JsonResult getConsolidatedUniform(string Company)
 	{

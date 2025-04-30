@@ -175,12 +175,11 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
 
             @page {
                 size: A4 landscape;
-                margin: 8.20mm 8.30mm 11.5mm 0;             
+                margin: 6.20mm 0 6.20mm 0;
                 -webkit-print-color-adjust: exact;
               font-family: 'Times New Roman', Times, serif, sans-serif;
                   page-break-after: always;
                  
-                    border:2px solid black;
                 header,
                 footer {
                     display: none;
@@ -308,6 +307,10 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
 
             }
         }
+         #logo {
+            max-width: 250px;
+
+        }
 
         .job-details h2,
         .client-details h2,
@@ -348,7 +351,7 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
     <div id="pagecontainer">
         <div class="container" id="content">
             <div class="header1" style="margin-top:-20px;">
-                <img src="/grouplreportingportal/GroupL.jfif" alt="Group L Logo" class="logo">
+                <img src="https://ifm360.in/grouplreportingportal/GroupL.jfif" alt="Group L Logo" id="logo">
                 <p style="margin-top:-20px;">3rd Floor, w31, Okhla Industrial Area Phase 2 <br /> New Delhi 110020 </p>
                 <br/>
                
@@ -370,16 +373,15 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
     var content1 = content + headerContent;
 
     var datadiv = document.getElementById("prindDiv");
-    //const hideFrame = document.createElement("iframe");
-    var popupwin = window.open('', '_blank', 'width=100%', 'height=100%');
-
-    popupwin.document.open();
+    var popupwin = window.open();
+   
     popupwin.document.write(content1 + datadiv.innerHTML);
-    //popupwin.document.close();
+    popupwin.document.close();
+    var logoImage = popupwin.document.getElementById("logo");
+    popupwin.onload = function () {
+        popupwin.focus();
+        popupwin.print();
+        popupwin.close();
 
-    popupwin.focus();
-    popupwin.print();
-    popupwin.close();
-    return true;
-
+    }
 });

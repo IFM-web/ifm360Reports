@@ -258,8 +258,6 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
                
             }
 
-            
-
             .no-print {
                 display: none;
             }
@@ -271,7 +269,7 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
               font-family: 'Times New Roman', Times, serif, sans-serif;
                   page-break-after: always;
                  
-                    border:2px solid black;
+                
                 header,
                 footer {
                     display: none;
@@ -294,9 +292,9 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
             font-family: 'Times New Roman', Times, serif, sans-serif;
             background-color: none;
             padding: 20px;
-            /*  border:1.2px solid black;*/
+          
             margin: 20px;         
-                  height:95vh;
+                  
            
         }
 
@@ -454,7 +452,7 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
     <div id="pagecontainer">
         <div class="container" id="content">
             <div class="header1" style="margin-top:-20px;">
-                <img src="/grouplreportingportal/grouplreportingportal/GroupL.jfif" alt="Group L Logo" class="logo">
+                <img src="https://ifm360.in/grouplreportingportal/GroupL.jfif" alt="Group L Logo" class="logo">
                 <p style="margin-top:-20px;">3rd Floor, w31, Okhla Industrial Area Phase 2 <br /> New Delhi 110020 </p>
                
             </div>
@@ -476,16 +474,17 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
 
     var datadiv = document.getElementById("prindDiv");
     const hideFrame = document.createElement("iframe");
-    var popupwin = window.open('', '_blank', 'width=200', 'height=200', 'left:100', 'top:100');
+   
 
-    popupwin.document.open();
+    var popupwin = window.open();
     popupwin.document.write(content1  + datadiv.innerHTML);
-    //popupwin.document.close();
-
-    popupwin.focus();
-    popupwin.print();
-    popupwin.close();
-    return true;
+    popupwin.document.close();
+    var logoImage = popupwin.document.getElementById("logoimag");
+    popupwin.onload = function () {
+        popupwin.focus();
+        popupwin.print();
+        popupwin.close();
+    }
 
 });
 

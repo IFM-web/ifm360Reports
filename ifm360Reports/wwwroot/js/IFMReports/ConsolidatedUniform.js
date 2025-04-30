@@ -309,6 +309,7 @@ function loadGridData() {
                     row += '<td>' + Data[i].CompanyCode + '</td>';
                     row += '<td>' + Data[i].EmpCode + '</td>';
                     row += '<td>' + Data[i].EmpName + '</td>';
+                    row += '<td>' + Data[i].date + '</td>';
                     row += '<td>' + Data[i].Trouser + '</td>';
                     row += '<td>' + Data[i].Shirt + '</td>';
                     row += '<td>' + Data[i]['Cap/Tie'] + '</td>';

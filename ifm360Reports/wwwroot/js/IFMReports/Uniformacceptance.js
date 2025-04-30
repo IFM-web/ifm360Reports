@@ -339,6 +339,8 @@ function ShowModel(LocId, EmpCode) {
             for (let item of data) {
                 var url = 'data:image/jpeg;base64,' + item.Photo
                 row += `<tr>
+
+                <td>${item.date}</td>
                 <td>${item.UniformItem}</td>
                 <td> <img data-toggle='modal' data-target='#myModal' style="width: 100px;height: 100px;" onclick='image("${url}")' src='${url}'/></td>
                 
