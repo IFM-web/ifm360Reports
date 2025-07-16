@@ -74,7 +74,68 @@ function SearchData() {
 }
 
 
+function SearchDatawithoutImage() {
+    $(".preloader").show();
+    $.ajax({
 
+        url: myurl + '/Reports/GetSearchAttendanceSuperwithoutImage',
+        type: 'post',
+        data: {
+            date: $("#txtdate").val(),
+            fromdate: $("#txtfromdate").val(),
+            Site: $("#site").val(),
+            Empno: $("#txtemployeeno").val(),
+            client: $("#client").val(),
+            shift: $("#ddlshift").val(),
+        },
+        success: function (data) {
+            $(".preloader").hide();
+            if (data != '[]') {
+
+
+                $(".companybody").empty();
+                var data = JSON.parse(data);
+
+                var rowlen = parseInt($('.companybody tr').length);
+                // console.log(data)
+                var row = '';
+                for (var i = 0; i < data.length; i++) {
+                    var url = 'data: image/jpeg;base64,' + data[i].EmployeeImage
+
+                    row += "<tr id='row" + i + "'><td style=''>" + parseInt(i + 1) + "</td><td  style='' class='ClientName'>" + data[i].ClientName + "</td><td style=''><span class='SiteName' id='sitename'>" + data[i].AsmtName + "</span></td><td style=''><span class='EmployeeCode' id='emp_code'>" + data[i].EmployeeCode + "</span></td><td style=''><span class='EmployeeName' id='emp_name'>" + data[i].EmployeeName + "</span></td><td style=''><span class='Designation'>" + data[i].Designation + "</span></td><td style=''><span class='ShiftDetails' id='ShiftDetails' >" + data[i].ShiftDetails + "</span></td><td style=''><span class='Date' id='dateField'>" + data[i].Date + "</span></td><td style=''><span class='InTime'>" + data[i].InTime + "</span></td><td style=''><span class='OutTime'>" + (data[i].OutTime !== null ? data[i].OutTime : '') + "</span></td><td style=''><span class='TotalMin'>" + (data[i].TotalMin !== null ? data[i].TotalMin : '') + "</span></td></tr>";
+
+
+                }
+
+                $(".companybody").prepend(row);
+
+
+
+                var datadiv = document.getElementById("prindDiv").innerHTML;
+                var data = document.getElementById("printbody")
+                $("#printbody").html(datadiv);
+
+
+            }
+            else {
+                $(".preloader").hide();
+                $(".companybody").empty();
+                alert('Record Not Available');
+            }
+
+
+        },
+        error: function (data) {
+            $(".preloader").hide();
+            var data = {
+                status: "Error",
+                msg: "Error on server.",
+                data: [],
+            }
+
+        },
+    });
+}
 function exportexcel(type, fn, dl) {
             var data = $(".companybody").val()
 

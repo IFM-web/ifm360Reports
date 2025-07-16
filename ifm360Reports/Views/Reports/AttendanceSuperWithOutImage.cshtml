@@ -1,0 +1,226 @@
+﻿@{
+    ViewData["Title"] = "Attendance Super Report WithOut Image";
+    Layout = "~/Views/Shared/_MainLayout1.cshtml";
+}
+
+<style>
+    .preloader {
+        width: 90px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+    }
+</style>
+<div class=" container-fluid" id="bdy">
+    <div class="card shadow mt-4" style="">
+        <div class="card-header py-3">
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">Attendance Super With Out Image</h6>
+        </div>
+        <div class="card-body">
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document" style="width: fit-content;margin-top: 90px;">
+                    <div class="modal-content" style="margin: 0 auto;">
+                        <div class="modal-header">
+                            <button onclick="rotateImage()" class="btn btn-primary">Rotate</button>
+                            <button type="button" onclick="resetImageRotation()" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img class="modal-content" style="width: 304px;height: 280px;" id="img01">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <input type="hidden" id="txtHiddenId" value="0" />
+                <input type="hidden" id="flgmode" value="ADD" />
+                <input type="hidden" id="UserId" value="@ViewBag" />
+                <input type="hidden" id="txtpagename" value="Attendance Super Reports of " />
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Client</label>
+                        <select class="form-control" id="client" onchange="bindsite()">
+                            <option value="All">All</option>
+                            @if (ViewBag.Client != null)
+                            {
+                                foreach (var item in ViewBag.Client as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4" id="clentfield">
+                    <div class="form-group">
+                        <label>Select Site	</label>
+                        <select class="form-control" id="site">
+                            <option value="All">All</option>
+                            @if (ViewBag.Site != null)
+                            {
+                                foreach (var item in ViewBag.Site as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Shift	</label>
+                        <select class="form-control" id="ddlshift">
+
+                            @if (ViewBag.Shift != null)
+                            {
+                                foreach (var item in ViewBag.Shift as List<SelectListItem>)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4" id="datafiled">
+                    <div class="form-group">
+                        <label>From Date	</label>
+                        <input type="date" class="form-control" id="txtfromdate" name="Date" />
+
+                    </div>
+                </div>
+                <div class="col-md-4" id="datafiled">
+                    <div class="form-group">
+                        <label>To Date	</label>
+                        <input type="date" class="form-control" id="txtdate" name="Date" />
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Employee No</label>
+                        <input type="text" id="txtemployeeno" class="form-control" name="Employee No" value="" />
+                    </div>
+                </div>
+
+
+                <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-primary" onclick="SearchDatawithoutImage()">View Attendance</button>
+
+                    <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
+                    <button class="btn btn-primary" id="Genratepdf">Export To PDF</button>
+
+                </div>
+
+
+                <div class="table-responsive mt-2">
+                    <div class="table table-bordered" id="prindDiv" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+                        <table id="data-table">
+
+                            <thead>
+                                <tr style="background-color: #c84143 !important;">
+                                    @* <th>Action</th> *@
+                                    <th>S.No</th>
+                                    <th>Client Name</th>
+                                    <th>Site Name</th>
+                                    <th>Emp Code</th>
+                                    <th>Emp Name</th>
+                                    <th>Designation</th>
+                                    <th>Shift Details</th>
+                                    <th>Date</th>
+                                    <th>In Time</th>
+                                    <th>Out Time</th>
+                                    <th>Working Minutes</th>
+                                
+
+
+                                </tr>
+                            </thead>
+                            <tbody class="companybody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table table-bordered" id="prindDivHid" style="display:none;" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+
+                        <table id="data-tablehid">
+
+                            <thead>
+                                <tr>
+
+                                    <th>S.No</th>
+                                    <th>Client Name</th>
+                                    <th>Site Name</th>
+                                    <th>Emp Code</th>
+                                    <th>Emp Name</th>
+                                    <th>Designation</th>
+                                    <th>Shift Details</th>
+                                    <th>Date</th>
+                                    <th>In Time</th>
+                                    <th>Out Time</th>
+                                    <th>Working Minutes</th>
+
+
+
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="companybody">
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script src="~/js/reports/attendancesuper2.js"></script>
+<script src="~/js/Master.js"></script>
+<script src="~/js/InsAjax.js"></script>
+<script src="~/js/xlxs.full.min.js"></script>
+
+
+
+
+
+
+
+

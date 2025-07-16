@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ifm360Reports.AuthFilter;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 namespace ifm360Reports.Controllers
 {
+    [AuthenticationFilter]
     public class IFMReportController : Controller
     {
 

@@ -7,6 +7,8 @@ using System.Data;
 using System.Drawing;
 using System.Security.Policy;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.Filters;
+using ifm360Reports.AuthFilter;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -16,15 +18,12 @@ namespace ifm360Reports.Controllers
 	{
 		db_Utility util = new db_Utility();
 		ClsUtility utility = new ClsUtility();
-
+        [AuthenticationFilter]
 		public IActionResult PhotoAttendance()
 
 		{
 
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
-            {
-                return RedirectToAction("Login", "Home");
-            }
+           
             var companyid = HttpContext.Session.GetString("companyid");
 			var locationid = HttpContext.Session.GetString("locationid");
 			var branchid = HttpContext.Session.GetString("branchid");
@@ -64,14 +63,11 @@ namespace ifm360Reports.Controllers
 
 			return View();
 		}
-
-		public IActionResult AttendanceSuper()
+        [AuthenticationFilter]
+        public IActionResult AttendanceSuper()
 		{
 
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
-            {
-                return RedirectToAction("Login", "Home");
-            }
+           
             var companyid = HttpContext.Session.GetString("companyid");
 			var locationid = HttpContext.Session.GetString("locationid");
 			var branchid = HttpContext.Session.GetString("branchid");
@@ -100,7 +96,40 @@ namespace ifm360Reports.Controllers
 			return View();
 		}
 
-		public IActionResult VisitReport(string date, string client, string AsmtId, string vtype, string empid,string LocautoId)
+        [AuthenticationFilter]
+        public IActionResult AttendanceSuperWithOutImage()
+        {
+
+            var companyid = HttpContext.Session.GetString("companyid");
+            var locationid = HttpContext.Session.GetString("locationid");
+            var branchid = HttpContext.Session.GetString("branchid");
+
+            if (HttpContext.Session.GetString("UserName").ToUpper() == "HDBADMIN" && HttpContext.Session.GetString("password").ToUpper() == "ADMIN@123")
+            {
+                List<SelectListItem> ddl = new List<SelectListItem>();
+                ddl.Add(new SelectListItem
+                {
+                    Value = "GL0072",
+                    Text = "Hdb Financial Services Limited"
+                });
+                ViewBag.client = ddl;
+                ViewBag.Region = util.PopulateDropDown("exec udp_GetRegion @CompanyCode='" + companyid + "'", util.strElect);
+                ViewBag.Shift = util.PopulateDropDown("exec udp_GetStandardShifts @LocationAutoId='" + branchid + "'", util.strElect);
+
+            }
+            else
+            {
+                ViewBag.client = util.PopulateDropDown("exec udp_GetClientFromBranch @CompanyCode='" + companyid + "',@LocationAutoId ='All'", util.strElect);
+                ViewBag.Region = util.PopulateDropDown("exec udp_GetRegion @CompanyCode='" + companyid + "'", util.strElect);
+                ViewBag.Shift = util.PopulateDropDown("exec udp_GetStandardShifts @LocationAutoId='" + branchid + "'", util.strElect);
+            }
+
+
+            return View();
+        }
+
+        [AuthenticationFilter]
+        public IActionResult VisitReport(string date, string client, string AsmtId, string vtype, string empid,string LocautoId)
 		{
 			var companyid = HttpContext.Session.GetString("companyid");
 			var locationid = HttpContext.Session.GetString("locationid");
@@ -117,7 +146,7 @@ namespace ifm360Reports.Controllers
 			return View();
 		}
 
-
+        [AuthenticationFilter]
         public IActionResult VisittopReport(string date, string client, string AsmtId, string vtype, string empid, string LocautoId)
         {
             var companyid = HttpContext.Session.GetString("companyid");
@@ -134,13 +163,10 @@ namespace ifm360Reports.Controllers
 
             return View();
         }
-
+        [AuthenticationFilter]
         public IActionResult ConsolidatedVisitReport()
 		{
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
-            {
-                return RedirectToAction("Login", "Home");
-            }
+          
             var companyid = HttpContext.Session.GetString("companyid");
 			var locationid = HttpContext.Session.GetString("locationid");
 			var branchid = HttpContext.Session.GetString("branchid");
@@ -174,12 +200,10 @@ namespace ifm360Reports.Controllers
            
 			return View();
 		}
+        [AuthenticationFilter]
         public IActionResult ConsolidatedVisittoReport()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
-            {
-                return RedirectToAction("Login", "Home");
-            }
+            
             var companyid = HttpContext.Session.GetString("companyid");
             var locationid = HttpContext.Session.GetString("locationid");
             var branchid = HttpContext.Session.GetString("branchid");
@@ -264,7 +288,25 @@ namespace ifm360Reports.Controllers
 			return Json(JsonConvert.SerializeObject(dt));
 		}
 
+		[HttpPost]
 
+		public JsonResult GetSearchAttendanceSuperwithoutImage(string date, string site, string Empno, string client, string shift, string fromdate)
+		{
+
+
+			var companyid = HttpContext.Session.GetString("companyid");
+			var locationid = HttpContext.Session.GetString("locationid");
+			var branchid = HttpContext.Session.GetString("branchid");
+
+			string div = "";
+			DataTable dt = new DataTable();
+
+
+			var ds = util.Fill("exec udp_GetEmployeeSuperAttendanceGroupL_WithoutImage @LocationAutoId ='" + branchid + "',@FromDate='" + fromdate + "',@EmployeeNumber='" + Empno + "',@AsmtCode='" + site + "',@ClientCode='" + client + "',@ShiftCode='" + shift + "',@ToDate='" + date + "' ", util.strElect);
+			dt = ds.Tables[0];
+
+			return Json(JsonConvert.SerializeObject(dt));
+		}
 		[HttpPost]
 
 		public JsonResult bindSite(string siteid)
@@ -349,13 +391,11 @@ namespace ifm360Reports.Controllers
 			return Json(data);
 		}
 
-		#region Shortage Report 
-		public IActionResult ShortageReport()
+        #region Shortage Report 
+        [AuthenticationFilter]
+        public IActionResult ShortageReport()
 		{
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
-            {
-                return RedirectToAction("Login", "Home");
-            }
+          
             var companyid = HttpContext.Session.GetString("companyid");
 			var locationid = HttpContext.Session.GetString("locationid");
 			var branchid = HttpContext.Session.GetString("branchid");
@@ -450,16 +490,13 @@ namespace ifm360Reports.Controllers
 			return Json(data);
 		}
 
-		#endregion
+        #endregion
 
-		#region Shortage Report Client Wise
-
-		public IActionResult ShortageReportClientWise()
+        #region Shortage Report Client Wise
+        [AuthenticationFilter]
+        public IActionResult ShortageReportClientWise()
 		{
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
-            {
-                return RedirectToAction("Login", "Home");
-            }
+            
             var companyid = HttpContext.Session.GetString("companyid");
             var locationid = HttpContext.Session.GetString("locationid");
             var branchid = HttpContext.Session.GetString("branchid");
@@ -509,12 +546,10 @@ namespace ifm360Reports.Controllers
         #endregion
 
         #region Out Of Range
-		public IActionResult OutOfRange()
+        [AuthenticationFilter]
+        public IActionResult OutOfRange()
 		{
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
-            {
-                return RedirectToAction("Login", "Home");
-            }
+            
             var companyid = HttpContext.Session.GetString("companyid");
             var locationid = HttpContext.Session.GetString("locationid");
             var branchid = HttpContext.Session.GetString("branchid");
@@ -587,13 +622,10 @@ namespace ifm360Reports.Controllers
 
         #endregion
         #region AuditStatusReport Report
+        [AuthenticationFilter]
         public IActionResult AuditStatusReport()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
+         
             var branchid = HttpContext.Session.GetString("branchid");
             ViewBag.customer = util.PopulateDropDown("exec udpMstSale_Client_Get_Audit @LocationAutoID='"+ branchid + "' ", util.strElect);
 
@@ -623,6 +655,7 @@ namespace ifm360Reports.Controllers
             DataTable dt = ds.Tables[0];
             return Json(JsonConvert.SerializeObject(dt));
         }
+        [AuthenticationFilter]
         public IActionResult AppointmentLetterAcceptance(DataSet data)
         {
             ViewBag.Region = util.PopulateDropDown("exec udp_GetReportPortalCompany", util.strElect);
@@ -636,6 +669,73 @@ namespace ifm360Reports.Controllers
             return View();
         }
 
+        #region Leave Date Report
+        [AuthenticationFilter]
+        public IActionResult LeaveDate()
+        {
+            return View();
+        }
+
+        public JsonResult GetLeaveDateData(string Year,string Month)
+        {
+            var ds = util.Fill("exec udp_GetGroupLLeaveData @Year ='" + Year + "',@Month='"+Month+"' ", util.strElect);
+            DataTable dt = ds.Tables[0];
+            return Json(JsonConvert.SerializeObject(dt));
+        }
+        [HttpPost]
+        public JsonResult DeleteAndstatusUpdate(string type, int AutoId,int status)
+        {
+            string Message = string.Empty;
+            if(type == "StatusUpdate")
+            {
+                string Mes = util.execQuery("Update GroupLNewAppLeaveMaster set ApprovalStatus='"+status+"'  where AutoId='" + AutoId+"'", util.strElect);
+                if (Mes == "Successfull")
+                {
+                    Message = "Leave Record Status Updated Successfully";
+                }
+                else
+                {
+                    Message = "Error in Updating Leave Record Status";
+                }
+
+            }
+            else if(type == "Delete")
+            {
+                string Mes = util.execQuery("Delete from GroupLNewAppLeaveMaster where AutoId='"+AutoId+"'", util.strElect);
+
+                if (Mes == "Successfull")
+                {
+                    Message= "Leave Record Deleted Successfully";
+                }
+               else
+                {
+                    Message = "Error in Deleting Leave Record";
+                }
+
+
+            }
+            return Json(JsonConvert.SerializeObject(new { Message = Message }));
+        }
+
+
+        #endregion
+
+
+        #region Regularization Report
+        [AuthenticationFilter]
+        public IActionResult Regularization()
+        {
+            return View();
+        }
+
+        public JsonResult GetRegularization(string Year, string Month)
+        {
+            var ds = util.Fill("exec udp_GetGroupLRegualrizationData @Year ='" + Year + "',@Month='" + Month + "' ", util.strElect);
+            DataTable dt = ds.Tables[0];
+            return Json(JsonConvert.SerializeObject(dt));
+        }
+
+        #endregion
 
 
 
@@ -643,7 +743,6 @@ namespace ifm360Reports.Controllers
 
 
 
-
-	}
+    }
 }
 
