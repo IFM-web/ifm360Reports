@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Regularization Report";
+    ViewData["Title"] = "Monthly Regularization Report";
     Layout = "~/Views/Shared/_MainLayout1.cshtml";
 }
 <style>
@@ -20,7 +20,7 @@
     <div class="card shadow mt-4" style="">
         <div class="card-header py-3">
 
-            <h6 id="header" class="m-0 font-weight-bold text-primary ">Regularization Report</h6>
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">Monthly Regularization Report</h6>
         </div>
         <div class="card-body">
 
@@ -100,9 +100,9 @@
                     <button class="btn btn-primary" id="pdfid">Export To PDF</button> *@
 
                 </div>
-
+                <input id="filterInput" type="text" style="height: 40px;margin-left: 16px;" class="form-control col-3" placeholder="Search Here.." />
                 <div class="table-responsive mt-2">
-                    <div class="table table-bordered" id="tableid" width="100%" cellspacing="0">
+                    <div class="table table-bordered" id="data-table" width="100%" cellspacing="0">
                         @*    <style>
                         table, th, td {
                         border: 1px solid black;
@@ -135,8 +135,9 @@
                                     <th>Approved By ID</th>
                                     <th>Approved By Name</th>
                                     <th>Remarks</th>
-                                  
 
+                                    <th>Status Update</th>
+                                    <th>Delete</th>
 
 
                                 </tr>

@@ -328,6 +328,9 @@ function loadGridData()
                     row += `<td> ${Data[i].ApprovedByID || ''} </td>`;
                     row += `<td> ${Data[i].ApprovedByName || ''} </td>`;
                     row += `<td> ${Data[i].Remarks || ''} </td>`;
+                    row += `<td><button onclick="DeleteOrUpdate('StatusUpdate',${Data[i].Autoid},'${Data[i].ApprovalStatus}')" class="btn btn-primary">Update Status</button></td>`;
+                    row += `<td><button onclick="DeleteOrUpdate('Delete',${Data[i].Autoid},'${Data[i].ApprovalStatus}')" class="btn btn-danger">Delete</button></td>`;
+                    row += '</tr>';
                     row += '</tr>';
                     $('#data-table tbody').append(row);
                 }
@@ -335,6 +338,31 @@ function loadGridData()
                 $(".preloader").hide();
                 $('#data-table tbody').append('<tr><td colspan="7" class="text-center">No data available.</td></tr>');
             }
+        },
+        error: function (xhr, status, error) {
+            $(".preloader").hide();
+            console.log('Error loading data:', error);
+            $('#data-table tbody').html('<tr><td colspan="7" class="text-center">Error fetching data.</td></tr>');
+        }
+    });
+
+
+}
+
+function DeleteOrUpdate(type, AutoId, status) {
+
+
+
+    $.ajax({
+        url: myurl + '/Reports/RegularizationDeleteAndstatusUpdate',
+        type: 'post',
+        data: {
+            type: type, AutoId: AutoId, status: status == "Approved" ? 0 : 1
+        },
+        success: function (data) {
+            var data = JSON.parse(data);
+            alert(data.Message);
+            window.location.reload();
         },
         error: function (xhr, status, error) {
             $(".preloader").hide();

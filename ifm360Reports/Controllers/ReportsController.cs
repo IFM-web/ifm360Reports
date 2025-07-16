@@ -734,6 +734,49 @@ namespace ifm360Reports.Controllers
             DataTable dt = ds.Tables[0];
             return Json(JsonConvert.SerializeObject(dt));
         }
+        [HttpPost]
+        public JsonResult RegularizationDeleteAndstatusUpdate(string type, int AutoId, int status)
+        {
+            string Message = string.Empty;
+            if (type == "StatusUpdate")
+            {
+                string Mes = "";
+                if (status == 1)
+                {
+                     Mes = util.execQuery("Update GroupLNewAppAttendanceRegularization set ApprovalStatus='" + status + "'  ,ApprovedByID='"+HttpContext.Session.GetString("UserName") +"',ApprovedByName='" + HttpContext.Session.GetString("UserName") +"',ApprovalDate=getdate() where AutoId='" + AutoId + "'", util.strElect);
+                }
+                else
+                {
+                    Mes = util.execQuery("Update GroupLNewAppAttendanceRegularization set ApprovalStatus='" + status + "'  ,ApprovedByID='',ApprovedByName='',ApprovalDate=NULL where AutoId='" + AutoId + "'", util.strElect);
+                }
+               
+                if (Mes == "Successfull")
+                {
+                    Message = "Regularization  Record Status Updated Successfully";
+                }
+                else
+                {
+                    Message = "Error in Updating Regularization  Record Status";
+                }
+
+            }
+            else if (type == "Delete")
+            {
+                string Mes = util.execQuery("Delete from GroupLNewAppAttendanceRegularization where AutoId='" + AutoId + "'", util.strElect);
+
+                if (Mes == "Successfull")
+                {
+                    Message = "Regularization  Record Deleted Successfully";
+                }
+                else
+                {
+                    Message = "Error in Deleting Regularization  Record";
+                }
+
+
+            }
+            return Json(JsonConvert.SerializeObject(new { Message = Message }));
+        }
 
         #endregion
 
