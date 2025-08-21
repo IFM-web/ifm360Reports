@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ifm360Reports.AuthFilter;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Http;
 
 
 namespace ifm360Reports.Controllers
@@ -18,6 +19,16 @@ namespace ifm360Reports.Controllers
 	{
 		db_Utility util = new db_Utility();
 		ClsUtility utility = new ClsUtility();
+       protected string Customer = string.Empty;
+       protected int Customerlevel;
+
+        public ReportsController(IHttpContextAccessor httpContextAccessor)
+        {
+           Customer= httpContextAccessor.HttpContext.Session.GetString("Customer");
+           Customerlevel= Convert.ToInt16( httpContextAccessor.HttpContext.Session.GetString("CustomerLevel"));
+        }
+
+
         [AuthenticationFilter]
 		public IActionResult PhotoAttendance()
 
@@ -52,7 +63,9 @@ namespace ifm360Reports.Controllers
             }
 			else
 			{
-                ViewBag.client = util.PopulateDropDown("exec udp_GetClientFromBranch @CompanyCode='" + companyid + "',@LocationAutoId ='All'", util.strElect);
+                ViewBag.client = CustomerDropDown(Customerlevel);
+
+                
                 ViewBag.Region = util.PopulateDropDown("exec udp_GetRegion @CompanyCode='" + companyid + "'", util.strElect);
                 ViewBag.Shift = util.PopulateDropDown("exec udp_GetStandardShifts @LocationAutoId='" + branchid + "'", util.strElect);
             }
@@ -87,7 +100,7 @@ namespace ifm360Reports.Controllers
             }
             else
             {
-                ViewBag.client = util.PopulateDropDown("exec udp_GetClientFromBranch @CompanyCode='" + companyid + "',@LocationAutoId ='All'", util.strElect);
+                ViewBag.client = CustomerDropDown(Customerlevel);
                 ViewBag.Region = util.PopulateDropDown("exec udp_GetRegion @CompanyCode='" + companyid + "'", util.strElect);
                 ViewBag.Shift = util.PopulateDropDown("exec udp_GetStandardShifts @LocationAutoId='" + branchid + "'", util.strElect);
             }
@@ -119,7 +132,7 @@ namespace ifm360Reports.Controllers
             }
             else
             {
-                ViewBag.client = util.PopulateDropDown("exec udp_GetClientFromBranch @CompanyCode='" + companyid + "',@LocationAutoId ='All'", util.strElect);
+                ViewBag.client = CustomerDropDown(Customerlevel);
                 ViewBag.Region = util.PopulateDropDown("exec udp_GetRegion @CompanyCode='" + companyid + "'", util.strElect);
                 ViewBag.Shift = util.PopulateDropDown("exec udp_GetStandardShifts @LocationAutoId='" + branchid + "'", util.strElect);
             }
@@ -782,8 +795,66 @@ namespace ifm360Reports.Controllers
 
 
 
+        public  List<SelectListItem> CustomerDropDown(int customer)
+        {
+            if (customer == 1)
+            {
+                string json = HttpContext.Session.GetString("Key");
 
+                List<SelectListItem> branchList = string.IsNullOrEmpty(json)
+                    ? new List<SelectListItem>()
+                    : JsonConvert.DeserializeObject<List<SelectListItem>>(json);
+                return branchList;
+            }
+            else
+            {
+                return util.PopulateDropDown("exec udp_GetClientFromBranch @CompanyCode='" + HttpContext.Session.GetString("companyid") + "',@LocationAutoId ='All'", util.strElect);
+            }
+        }
+        [AuthenticationFilter]
+        public IActionResult PendingVisitReport()
+        {
 
+            var companyid = HttpContext.Session.GetString("companyid");
+            var locationid = HttpContext.Session.GetString("locationid");
+            var branchid = HttpContext.Session.GetString("branchid");
+
+            if (HttpContext.Session.GetString("UserName").ToUpper() == "HDBADMIN" && HttpContext.Session.GetString("password").ToUpper() == "ADMIN@123")
+            {
+                List<SelectListItem> ddl = new List<SelectListItem>();
+                ddl.Add(new SelectListItem
+                {
+                    Value = "GL0072",
+                    Text = "Hdb Financial Services Limited"
+                });
+                List<SelectListItem> ddl2 = new List<SelectListItem>();
+                ddl2.Add(new SelectListItem
+                {
+                    Value = "North",
+                    Text = "North"
+                });
+                ViewBag.customer = ddl;
+                ViewBag.Region = ddl2;
+
+            }
+            else
+            {
+                ViewBag.customer = util.PopulateDropDown("exec udpMstSale_Client_Get @LocationAutoID ='" + branchid + "'", util.strElect);
+
+                ViewBag.Region = util.PopulateDropDown("exec udp_GetRegion @CompanyCode='" + companyid + "'", util.strElect);
+            }
+            return View();
+        }
+
+        [AuthenticationFilter]
+        public JsonResult GetPendingVisitReport(string ClientCode,string Region,string Duration)
+        {
+            var branchid = HttpContext.Session.GetString("branchid");
+            var ds = util.Fill(@$"exec udp_GetCustomerFeedbackUnDoneReports @LocationAutoID='{branchid}',@ClientCode='{ClientCode}',@Region='{Region}',@Duration='{Duration}' ", util.strElect);
+
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+
+        }
 
 
     }

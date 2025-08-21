@@ -1,6 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Photo Attendance Report";
     Layout = "~/Views/Shared/_MainLayout1.cshtml";
+    @using Microsoft.AspNetCore.Http;
+
+    @inject IHttpContextAccessor HttpContextAccessor
 }
 
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -65,6 +68,7 @@
 
                     </div>
                 </div>
+                	@if (HttpContextAccessor.HttpContext.Session.GetString("CustomerLevel") == "0") { 
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Select Region</label>
@@ -79,7 +83,7 @@
                             }
                         </select>
                     </div>
-                </div>
+                </div>}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Employee No</label>
@@ -90,7 +94,7 @@
                     <div class="form-group">
                         <label>Select Client</label>
                         <select class="form-control" id="client">
-                          
+                          <option value="All">All</option>
                             @if (ViewBag.client != null)
                             {
                                 foreach (var item in ViewBag.client as List<SelectListItem>)

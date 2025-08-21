@@ -1,26 +1,111 @@
 ﻿
 
 $(document).ready(function () {
-    Month
-    var month = new Date().getMonth() + 1;
-    $("#Month").val(month);
-    loadGridData();
+
+
+   
 })
-let myurl = localStorage.getItem('Myurl');
+
+function SearchData() {
+    $(".preloader").show();
+    $.ajax({
+
+        url: localStorage.getItem('Myurl') + '/Reports/GetPendingVisitReport',
+        type: 'get',
+        data: {
+            
+            Duration: $("#duration").val(),
+            ClientCode: $("#custid").val(),
+            Region: $("#Regid").val(),
+
+        },
+        success: function (data) {
+            console.log(data);
+            $(".preloader").show();
+            if (data != '[]') {
+
+
+                $(".companybody").empty();
+                var data = JSON.parse(data);
+
+
+
+                var rowlen = parseInt($('.companybody tr').length);
+                // console.log(data)
+                var row = '';
+                var row2 = '';
+
+                for (var i = 0; i < data.length; i++) {
+                    $(".preloader").hide();
+                    var url = 'data: image/jpeg;base64,' + data[i].VisitImage
+
+                    row += `<tr id='row" + i + "'><td style=''>${parseInt(i + 1)}</td><td  style='' class='zone'>${data[i].Zone}</td><td  style='' class='branch'>${data[i].Branch}</td><td  style='' class='CustomerName'>${data[i]["Customer Name"]}</td><td style=''><span class='AsmtName'>${data[i]["Site Name"]}</span></td><td> <span class='ClientDesignation'>${data[i].Status || '' }</span></td ></tr>`;
+
+                   
+
+
+                }
+
+                $(".companybody").prepend(row);
+               
+
+
+
+
+
+            }
+            else {
+                $(".preloader").hide();
+                $(".companybody").empty();
+                $(".companybody2").empty();
+                alert('Record Not Available');
+            }
+
+
+        },
+        error: function (data) {
+            $(".preloader").hide();
+            var data = {
+                status: "Error",
+                msg: "Error on server.",
+                data: [],
+            }
+
+        },
+    });
+}
+
+
+
 function exportexcel(type, fn, dl) {
+    
+
+
+
     var ddd = $("#txtpagename").val();
     var elt = document.getElementById('data-table');
     filename = ddd;
-    console.log(filename);
-    console.log(elt);
+  
     var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+
+
     return dl ?
         XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
         XLSX.writeFile(wb, fn || (filename + '.' + (type || 'xlsx')));
 }
 
-document.getElementById("pdfid").addEventListener("click", () => {
-    var companyName = $("#CompanyCodeid :selected").text();
+
+document.getElementById("Genratepdf").addEventListener("click", () => {
+    var data = $("#txttodate").val()
+    var data1 = $("#txtfromdate").val()
+
+    //  var headerContent = `
+    //   <section class="customer-info">
+    //<div class="customer-details"><p>Client Name: <strong> ${companyName}</strong></p>
+    //  </div><div class="site-details">Date: <strong> ${selectedDate}</strong><p></p></div>
+    //  </section><br/>
+
+    // `
     var content = `
 <!DOCTYPE html>
 <html>
@@ -28,7 +113,7 @@ document.getElementById("pdfid").addEventListener("click", () => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AppointmentLetterAcceptanceReport ${companyName}</title>
+    <title>Pending Visit Report</title>
 
     <style>
         * {
@@ -42,8 +127,10 @@ document.getElementById("pdfid").addEventListener("click", () => {
                 border-collapse: collapse;
                 width: 100%;
                 margin-top: 0;
+
             }
         }
+
         th,
         td {
             border: 1px solid black;
@@ -52,12 +139,18 @@ document.getElementById("pdfid").addEventListener("click", () => {
         }
 
         #emp_name {
-            width: 80px;
-            display: block;
+             max-width:100px;
+              display: inline-block;
+            word-wrap: break-word;
         }
 
         #dateField {
             width: 80px;
+            display: inline-block;
+        }
+
+        #ShiftDetails {
+            width: 70px;
             display: inline-block;
         }
 
@@ -81,19 +174,18 @@ document.getElementById("pdfid").addEventListener("click", () => {
                
             }
 
-            
-
             .no-print {
                 display: none;
             }
 
             @page {
                 size: A4 landscape;
-                margin: 6.20mm 0 6.20mm 0;             
+                margin: 6.20mm 6.20mm 6.20mm 0;             
                 -webkit-print-color-adjust: exact;
               font-family: 'Times New Roman', Times, serif, sans-serif;
                   page-break-after: always;
                  
+                
                 header,
                 footer {
                     display: none;
@@ -116,9 +208,9 @@ document.getElementById("pdfid").addEventListener("click", () => {
             font-family: 'Times New Roman', Times, serif, sans-serif;
             background-color: none;
             padding: 20px;
-            /*  border:1.2px solid black;*/
+          
             margin: 20px;         
-                  height:95vh;
+                  
            
         }
 
@@ -220,7 +312,10 @@ document.getElementById("pdfid").addEventListener("click", () => {
                 color: white;
 
             }
+
         }
+
+       
 
         .job-details h2,
         .client-details h2,
@@ -228,6 +323,9 @@ document.getElementById("pdfid").addEventListener("click", () => {
             font-size: 20px;
             padding-bottom: 10px;
             padding-top: 20px;
+        }
+        #btn{
+            display:none;
         }
 
         @media (max-width: 768px) {
@@ -247,6 +345,17 @@ document.getElementById("pdfid").addEventListener("click", () => {
                 max-width: 70px;
             }
         }
+        #sitename {
+            max-width:100px;
+            display: inline-block;
+            word-wrap: break-word;
+        }
+        #clientemail{
+           max-width:100px;
+            display: inline-block;
+            word-wrap: break-word;
+            
+        }
     </style>
 </head>
 
@@ -256,28 +365,32 @@ document.getElementById("pdfid").addEventListener("click", () => {
     var headerContent = `<body>
     <div id="pagecontainer">
         <div class="container" id="content">
-            <div class="header1">
-                 <img src="https://ifm360.in/grouplreportingportal/GroupL.jfif" alt="Group L Logo" class="logo">
+            <div class="header1" style="margin-top:-20px;">
+                <img src="https://ifm360.in/grouplreportingportal/GroupL.jfif" alt="Group L Logo" class="logo">
                 <p style="margin-top:-20px;">3rd Floor, w31, Okhla Industrial Area Phase 2 <br /> New Delhi 110020 </p>
-                <h1 style='text-align: center;' id="myhid">AppointmentLetterAcceptanceReport ${companyName} </h1>
+               
             </div>
+            <br/>
 
         </div>
           </div>
         </body>
+
 </html>
+
 `;
 
 
-    var datadiv = document.getElementById("tableid").innerHTML;
+    var datadiv = document.getElementById("prindDiv").innerHTML;
+    // var topdata = document.getElementById("dataclient").innerHTML;
 
     var content1 = content + headerContent;
 
-    var datadiv = document.getElementById("tableid");
+    var datadiv = document.getElementById("prindDiv");
     const hideFrame = document.createElement("iframe");
-    
-    var popupwin = window.open();
 
+
+    var popupwin = window.open();
     popupwin.document.write(content1 + datadiv.innerHTML);
     popupwin.document.close();
     var logoImage = popupwin.document.getElementById("logoimag");
@@ -286,95 +399,64 @@ document.getElementById("pdfid").addEventListener("click", () => {
         popupwin.print();
         popupwin.close();
     }
+
 });
-function loadGridData()
-{
-    $(".preloader").show();
-    var Year = $("#Year").val();
-    var Month = $("#Month").val();
 
 
+
+function bindsite() {
     $.ajax({
-        url: myurl + '/Reports/GetRegularization',
-        type: 'GET',
-        data: {
-            Year: Year,
-            Month: Month,
-        },
-        success: function (data) {
-            $(".preloader").hide();
-            $('#data-table tbody').empty();
-            if (data && data.length > 0) {
-                var sno = 1;
-                var Data = JSON.parse(data);
-                console.log(Data);
-                for (var i = 0; i < Data.length; i++) {
-                    var row = '<tr>';
-                    row += '<td>' + sno++ + '</td>';
-                    row += '<td>' + Data[i].CompanyDesc + '</td>';
-                    row += '<td>' + Data[i].ClientCode + '</td>';
-                    row += '<td>' + Data[i].ClientSiteName + '</td>';
-                    row += '<td>' + Data[i].EmpID + '</td>';                   
-                    row += '<td>' + Data[i].EmpName + '</td>';
-                    row += '<td>' + Data[i].Designation + '</td>';
-                    row += '<td>' + Data[i].ShiftDetails + '</td>';
-                    row += '<td>' + Data[i].Date + '</td>';
-                    row += `<td> ${Data[i].ApplyDate ||''} </td>`;
-                    row += '<td>' + Data[i].FromTime + '</td>';
-                    row += '<td>' + Data[i].ToTime + '</td>';
-              
-                
-                    row += '<td>' + Data[i].ApprovalStatus + '</td>';
-                    row += `<td> ${Data[i].ApprovedByID || ''} </td>`;
-                    row += `<td> ${Data[i].ApprovedByName || ''} </td>`;
-                    row += `<td> ${Data[i].Remarks || ''} </td>`;
-                    row += `<td><button onclick="DeleteOrUpdate('StatusUpdate',${Data[i].Autoid},'${Data[i].ApprovalStatus}')" class="btn btn-primary">Update Status</button></td>`;
-                    row += `<td>${Data[i].ApprovalStatus =='Pending'?`<button onclick="DeleteOrUpdate('Delete',${Data[i].Autoid},'${Data[i].ApprovalStatus}')" class="btn btn-danger">Delete</button>`:` `}</td>`;
-                    row += '</tr>';
-                    row += '</tr>';
-                    $('#data-table tbody').append(row);
-                }
-            } else {
-                $(".preloader").hide();
-                $('#data-table tbody').append('<tr><td colspan="7" class="text-center">No data available.</td></tr>');
-            }
-        },
-        error: function (xhr, status, error) {
-            $(".preloader").hide();
-            console.log('Error loading data:', error);
-            $('#data-table tbody').html('<tr><td colspan="7" class="text-center">Error fetching data.</td></tr>');
-        }
-    });
 
-
-}
-
-function DeleteOrUpdate(type, AutoId, status) {
-
-    confirmationMessage = type === 'Delete' ? 'Are you sure you want to delete this record?' : 'Are you sure you want to update the status?';
-    confirmation = confirm(confirmationMessage);
-    if (!confirmation) {
-        return;
-    }
-
-    $.ajax({
-        url: myurl + '/Reports/RegularizationDeleteAndstatusUpdate',
+        url: myurl + '/Reports/bindclient',
         type: 'post',
-        data: {
-            type: type, AutoId: AutoId, status: status == "Approved" ? 0 : 1
+        data: { custid: $("#custid").val(), },
+        success: function (data) {
+            bindvisittype();
+            var data = JSON.parse(data);
+
+            var dropdown = $('#client');
+            dropdown.empty();
+            for (var i = 0; i < data.length; i++) {
+
+                dropdown.append($('<option></option>').attr('value', data[i].AsmtId).text(data[i].CodeName));
+            }
+
         },
+        error: function (error) {
+            alert(error.massage);
+        }
+    })
+}
+function bindvisittype() {
+    $.ajax({
+
+        url: myurl + '/Reports/bindvisittype',
+        type: 'post',
+        data: { custid: $("#custid").val(), },
         success: function (data) {
             var data = JSON.parse(data);
-            alert(data.Message);
-            loadGridData();
+
+            var dropdown = $('#visittype');
+            dropdown.empty();
+            for (var i = 0; i < data.length; i++) {
+
+                dropdown.append($('<option></option>').attr('value', data[i].ChecklistHeader).text(data[i].ChecklistHeader));
+            }
+
         },
-        error: function (xhr, status, error) {
-            $(".preloader").hide();
-            console.log('Error loading data:', error);
-            $('#data-table tbody').html('<tr><td colspan="7" class="text-center">Error fetching data.</td></tr>');
+        error: function (error) {
+            alert(error.massage);
         }
-    });
-
-
+    })
 }
+
+
+function GetVisitReport(date, cleint, AsmtId, vtype, EmpId, LocautoId) {
+    window.location.href = "/grouplreportingportal/Reports/visitreport?date=" + date + "&&client=" + cleint + " &&AsmtId=" + AsmtId + "&&vtype=" + vtype + "&&empid=" + EmpId + " &&LocautoId=" + LocautoId + "";
+}
+
+function VisittopReport(date, cleint, AsmtId, vtype, EmpId, LocautoId) {
+    window.location.href = "/grouplreportingportal/Reports/VisittopReport?date=" + date + "&&client=" + cleint + " &&AsmtId=" + AsmtId + "&&vtype=" + vtype + "&&empid=" + EmpId + " &&LocautoId=" + LocautoId + "";
+}
+
 

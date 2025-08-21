@@ -21,7 +21,7 @@
 	<script src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-	<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+	
 
 
 	<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
@@ -396,41 +396,55 @@
 					
 
 					<li class="active">
+						@if (HttpContextAccessor.HttpContext.Session.GetString("UserName") != "HRAdmin")
+						{
 						<a href="~/Home/BranchLogin" class="branchbtn"><span>Branch Selection</span></a>
+						}
 						<a data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed" href="#rpt"><span>Attendance Reports</span></a>
+						
 						<ul class="list-unstyled collapse" id="rpt" style="">
+							@if (HttpContextAccessor.HttpContext.Session.GetString("UserName") != "HRAdmin")
+							{
 							<li><a href="~/Reports/PhotoAttendance"><span>Photo Attendance</span></a></li>
 							<li><a href="~/Reports/AttendanceSuper"><span>Attendance Super</span></a></li>
 							<li><a href="~/Reports/AttendanceSuperWithOutImage"><span>Attendance Super WithOut Image</span></a></li>
 							<li><a href="~/Reports/shortagereport"><span>Emp Shortage Report</span></a></li>
 							<li><a href="~/Reports/ShortageReportClientWise"><span>Site Shortage Report</span></a></li>		
 							<li><a href="~/Reports/outofrange"><span>Out Of Range Report</span></a></li>
-							
+								}
+@if (HttpContextAccessor.HttpContext.Session.GetString("UserName") == "HRAdmin")
+						{
 							<li><a href="~/Reports/LeaveDate"><span>Monthly Leave Report</span></a></li>
-							<li><a href="~/Reports/Regularization"><span>Regularization Report</span></a></li>
+							<li><a href="~/Reports/Regularization"><span>Monthly Regularization Report</span></a></li>
+						}
 						</ul>
-						<a data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed" href="#IFR"><span>IFM Reports </span></a>
-						<ul class="list-unstyled collapse" id="IFR" style="">
-							
-							<li><a href="~/Reports/ConsolidatedVisitReport"><span>Consolidated Visit Report</span></a></li>
-							<li><a href="~/Reports/AuditStatusReport"><span> Audit Status Report</span></a></li>
-							<li><a href="~/Reports/AppointmentLetterAcceptance"><span> Appointment Letter Acceptance Report</span></a></li>
-							<li><a href="~/IFMReport/UniformAccpten"><span> Uniform Acceptance Report</span></a></li>
+						@if (HttpContextAccessor.HttpContext.Session.GetString("UserName") != "HRAdmin")
+						{
+							<a data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed" href="#IFR"><span>IFM Reports </span></a>
+							<ul class="list-unstyled collapse" id="IFR" style="">
 
-							<li><a href="~/IFMReport/ConsolidatedUniform"><span> Consolidated Uniform  Report</span></a></li>
-							
-						</ul>
+								<li><a href="~/Reports/ConsolidatedVisitReport"><span>Consolidated Visit Report</span></a></li>
+
+								<li><a href="~/Reports/PendingVisitReport"><span>Pending Visit Report</span></a></li>
+								<li><a href="~/Reports/AuditStatusReport"><span> Audit Status Report</span></a></li>
+								<li><a href="~/Reports/AppointmentLetterAcceptance"><span> Appointment Letter Acceptance Report</span></a></li>
+								<li><a href="~/IFMReport/UniformAccpten"><span> Uniform Acceptance Report</span></a></li>
+
+								<li><a href="~/IFMReport/ConsolidatedUniform"><span> Consolidated Uniform  Report</span></a></li>
+
+							</ul>
+
+						}
+
+							</li>
+
 						
-					
-
-					</li>
 
 
 
 
-
-
-				</ul>
+					</ul>
+						
 
 			
 			</nav>
@@ -451,7 +465,7 @@
 	<script type="text/javascript"
 			charset="utf8"
 			src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-	<script src="@Url.Content("~/grouplreportingportal/js/xlxs.full.min.js")"></script>
+	<script src="@Url.Content("~/js/xlxs.full.min.js")"></script>
 
 	<script type="text/javascript">
 		// $(document).ready(function () {

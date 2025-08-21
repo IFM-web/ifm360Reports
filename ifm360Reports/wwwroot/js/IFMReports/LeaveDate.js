@@ -4,6 +4,8 @@ $(document).ready(function () {
     Month
     var month = new Date().getMonth() + 1;
     $("#Month").val(month);
+ 
+   
     loadGridData();
 })
 let myurl = localStorage.getItem('Myurl');
@@ -320,7 +322,7 @@ function loadGridData()
                     row += '<td>' + Data[i].ApplyDate + '</td>';
                     row += '<td>' + Data[i].ApprovalStatus + '</td>';
                     row += `<td><button onclick="DeleteOrUpdate('StatusUpdate',${Data[i].AutoId},'${Data[i].ApprovalStatus}')" class="btn btn-primary">Update Status</button></td>`;
-                    row += `<td><button onclick="DeleteOrUpdate('Delete',${Data[i].AutoId},'${ Data[i].ApprovalStatus }')" class="btn btn-danger">Delete</button></td>`;
+                    row += `<td>${Data[i].ApprovalStatus == 'Pending' ? `<button onclick="DeleteOrUpdate('Delete',${Data[i].Autoid},'${Data[i].ApprovalStatus}')" class="btn btn-danger">Delete</button>` : ` `}</td>`;
                     row += '</tr>';
                     $('#data-table tbody').append(row);
                 }
@@ -340,8 +342,13 @@ function loadGridData()
 }
 function DeleteOrUpdate(type,AutoId,status)
 {
-  
-   
+     year= $("#Year").val();
+     month = $("#Month").val();
+    confirmationMessage = type === 'Delete' ? 'Are you sure you want to delete this record?' : 'Are you sure you want to update the status?';
+    confirmation = confirm(confirmationMessage);
+    if (!confirmation) {
+        return;
+    }
 
     $.ajax({
         url: myurl + '/Reports/DeleteAndstatusUpdate',
@@ -352,7 +359,8 @@ function DeleteOrUpdate(type,AutoId,status)
         success: function (data) {
             var data = JSON.parse(data);
             alert(data.Message);
-            window.location.reload();
+            loadGridData();
+         
         },
         error: function (xhr, status, error) {
             $(".preloader").hide();

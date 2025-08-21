@@ -4,6 +4,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace ifm360Reports
 {
@@ -549,6 +550,10 @@ namespace ifm360Reports
 			respStreamReader.Close();
 			myResp.Close();
 		}
+
+
+        
+      
 
        
     }
