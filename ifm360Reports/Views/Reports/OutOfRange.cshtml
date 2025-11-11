@@ -118,6 +118,9 @@
                 </div>
 
 
+                
+
+
 
 
 
@@ -152,6 +155,7 @@
                                     <th>Branch</th>
                                     <th>Client Name</th>
                                     <th>Site Name</th>
+                                    <th>Shift Name</th>
                                     <th>Employee Code</th>
                                     <th>Employee Name</th>
                                     <th>Date</th>
@@ -167,7 +171,7 @@
                         </table>
                     </div>
 
-                    <div class="table table-bordered" id="prindDivHid" style="display:none;" width="100%" cellspacing="0">
+                   @*  <div class="table table-bordered" id="prindDivHid" style="display:none;" width="100%" cellspacing="0">
                             @*    <style>
                         table, th, td {
                         border: 1px solid black;
@@ -177,7 +181,7 @@
                         }
 
 
-                        </style> *@
+                        </style> 
 
                         <table id="data-tablehid">
 
@@ -189,6 +193,7 @@
                                     <th>Branch</th>
                                     <th>Client Name</th>
                                     <th>Site Name</th>
+                                    <th>Shift Name</th>
                                     <th>Emp Code</th>
                                     <th>Emp Name</th>
                                     <th>Date</th>
@@ -208,7 +213,7 @@
                             </tbody>
 
                         </table>
-                    </div>
+                    </div> *@
                 </div>
 
             </div>
@@ -218,7 +223,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="~/js/reports/Outofrange.js"></script>
+<script src="~/js/reports/Outofrange.js" asp-append-version="true"></script>
 <script src="~/js/Master.js"></script>
 <script src="~/js/InsAjax.js"></script>
 <script src="~/js/xlxs.full.min.js"></script>

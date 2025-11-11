@@ -108,6 +108,7 @@ function SearchData() {
             Branch: $("#Branchid").val(),
             client: $("#Clientid").val(),
             site: $("#siteid").val(),
+           
         },
         success: function (data) {
             console.log(data);
@@ -124,9 +125,10 @@ function SearchData() {
                 // console.log(data)
                 var row = '';
                 for (var i = 0; i < data.length; i++) {
+                    
                     /*   var url = 'data: image/jpeg;base64,' + datatable2[i].VisitImage*/
 
-                    row += "<tr id='row" + i + "'><td style=''>" + parseInt(i + 1) + "</td><<td  style='' class='Region'>" + data[i].Region + "</td><td style=''><span class='Branch'>" + data[i].Branch + "</span></td><td style=''><span class='ClientName'>" + data[i].ClientName + "</span></td><td style=''>" + data[i].SiteName + "</td><td style=''>" + data[i].EmpNum + "</td><td style=''>" + data[i].EmpName + "</td><td style=''>" + data[i].Date + "</td><td style='color:#da4647;'>" + data[i].Time + "</td><td style='color:#75a87c;'>" + (data[i].GeoLocation) + "</td><td style=''>" + (data[i].Latitude) + "</td><td style=''>" + (data[i].Longitude) + "</td><td style='color:#57539d;'>" + (data[i].KMDistance !== null && data[i].KMDistance !== undefined ? data[i].KMDistance :'') + "</td></tr>";
+                    row += "<tr id='row" + i + "'><td style=''>" + parseInt(i + 1) + "</td><<td  style='' class='Region'>" + data[i].Region + "</td><td style=''><span class='Branch'>" + data[i].Branch + "</span></td><td style=''><span class='ClientName'>" + data[i].ClientName + "</span></td><td style=''>" + data[i].SiteName + "</td><td style='min-width:100px'>" + data[i].Shift + "</td><td style=''>" + data[i].EmpNum + "</td><td style=''>" + data[i].EmpName + "</td><td style=''>" + data[i].Date + "</td><td style='color:#da4647;'>" + data[i].Time + "</td><td style='color:#75a87c;'>" + (data[i].GeoLocation) + "</td><td style=''>" + (data[i].Latitude) + "</td><td style=''>" + (data[i].Longitude) + "</td><td style='color:#57539d;'>" + (data[i].KMDistance !== null && data[i].KMDistance !== undefined ? data[i].KMDistance :'') + "</td></tr>";
 
 
                 }
@@ -168,7 +170,7 @@ function exportexcel(type, fn, dl) {
 
 
     var ddd = $("#txtpagename").val();
-    var elt = document.getElementById('data-tablehid');
+    var elt = document.getElementById('data-table');
     filename = ddd;
     console.log(filename);
     console.log(elt);

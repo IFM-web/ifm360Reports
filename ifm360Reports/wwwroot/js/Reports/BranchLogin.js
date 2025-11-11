@@ -22,7 +22,7 @@ $(document).ready(function () {
 function bindRegion(id) {
     $.ajax({
       
-        url: myurl +'/Home/bindRegion',
+        url: myurl +'/Home/bindRegion2',
         type: 'post',
         data: {id:id},
         success: function (data) {
@@ -47,7 +47,7 @@ function bindRegion(id) {
 function bindbranch() {
     $.ajax({
         
-       url:  myurl +'/Home/bindBranch',
+        url: myurl +'/Home/bindBranch2',
         type: 'post',
         data: { id: $("#company").val(), locid: $("#regiondiv").val() },
         success: function (data) {

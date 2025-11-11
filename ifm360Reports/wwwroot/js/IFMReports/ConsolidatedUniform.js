@@ -1,8 +1,8 @@
 ﻿
 
-$(document).ready(function () {
-    loadGridData();
-})
+//$(document).ready(function () {
+//    loadGridData();
+//})
 let myurl = localStorage.getItem('Myurl');
 function exportexcel(type, fn, dl) {
     var ddd = $("#txtpagename").val();
@@ -289,13 +289,17 @@ document.getElementById("pdfid").addEventListener("click", () => {
 function loadGridData() {
     $(".preloader").show();
     var Company = $("#CompanyCodeid").val();
+    var RegionId = $("#RegionId").val();
+    var branchid = $("#branchid").val();
 
 
     $.ajax({
         url: myurl + '/IFMReport/getConsolidatedUniform',
         type: 'GET',
         data: {
-            Company: Company
+            Company: Company,
+            Region: RegionId,
+            Branch: branchid
         },
         success: function (data) {
             $(".preloader").hide();
@@ -303,10 +307,14 @@ function loadGridData() {
             if (data && data.length > 0) {
                 var sno = 1;
                 var Data = JSON.parse(data);
+                console.log(Data);
                 for (var i = 0; i < Data.length; i++) {
                     var row = '<tr>';
                     row += '<td>' + sno++ + '</td>';
                     row += '<td>' + Data[i].CompanyCode + '</td>';
+                    row += '<td>' + Data[i].HrLocationDesc + '</td>';
+                    row += '<td>' + Data[i].Branch + '</td>';
+                 
                     row += '<td>' + Data[i].EmpCode + '</td>';
                     row += '<td>' + Data[i].EmpName + '</td>';
                     row += '<td>' + Data[i].date + '</td>';
@@ -338,4 +346,53 @@ function loadGridData() {
 }
 
 
+
+function bindRegion(id) {
+    $.ajax({
+
+        url: myurl + '/Home/bindRegion2',
+        type: 'post',
+        data: { id: id },
+        success: function (data) {
+
+            var data = JSON.parse(data);
+
+            var dropdown = $('#RegionId');
+            dropdown.empty();
+            dropdown.append('<option value"All">All</option>')
+            for (var i = 0; i < data.length; i++) {
+
+                dropdown.append($('<option></option>').attr('value', data[i].HrLocationCode).text(data[i].HrLocationDesc));
+            }
+
+            $('#branchid').val("All")
+        },
+        error: function (error) {
+            alert(error.massage);
+        }
+    })
+}
+function bindbranch() {
+    $.ajax({
+
+        url: myurl + '/Home/bindBranch2',
+        type: 'post',
+        data: { id: $("#CompanyCodeid").val(), locid: $("#RegionId").val() },
+        success: function (data) {
+            var data = JSON.parse(data);
+
+            var dropdown = $('#branchid');
+            dropdown.empty();
+            dropdown.append('<option value"All">All</option>')
+            for (var i = 0; i < data.length; i++) {
+
+                dropdown.append($('<option></option>').attr('value', data[i].LocationAutoID).text(data[i].LocationCode));
+            }
+
+        },
+        error: function (error) {
+            alert(error.massage);
+        }
+    })
+}
 

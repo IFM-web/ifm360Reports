@@ -1,0 +1,184 @@
+﻿
+@{
+    ViewData["Title"] = "Monthly Out Duty Report";
+    Layout = "~/Views/Shared/_MainLayout1.cshtml";
+}
+<style>
+    .preloader {
+        width: 90px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+    }
+
+    table tr td {
+        text-align: center;
+    }
+</style>
+
+<div class=" container-fluid" id="bdy">
+    <div class="card shadow mt-4" style="">
+        <div class="card-header py-3">
+
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">Monthly Out Duty Report</h6>
+        </div>
+        <div class="card-body">
+
+            <div class="modal fade" id="myModal" style="z-index:9999;" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document" style="width: fit-content;margin-top: 90px;">
+                    <div class="modal-content" style="margin: 0 auto;">
+                        <div class="modal-header">
+                            <button onclick="rotateImage()" class="btn btn-primary">Rotate</button>
+                            <button type="button" onclick="resetImageRotation()" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img class="modal-content" style="width: 304px;height: 280px;" id="img01">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <input type="hidden" id="txtHiddenId" value="0" />
+                <input type="hidden" id="flgmode" value="ADD" />
+                <input type="hidden" id="UserId" value="@ViewBag" />
+                <input type="hidden" id="txtpagename" value="Monthly Out Duty  Report" />
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Year</label>
+                        <select class="form-control" id="Year" onchange="loadGridData(this.value)">
+
+                         @{
+                                                         var currentYear = DateTime.Now.Year;
+                                for (int i = currentYear; i >= currentYear-1; i--)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                         }
+                           
+                          
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Select Month</label>
+                        <select class="form-control" id="Month" onchange="loadGridData(this.value)">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                       
+
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
+                    </div>
+                </div>
+
+
+
+                <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
+
+
+                <div class="col-lg-4">
+                    <input id="filterInput" type="text" style="font-size:large" class="form-control" placeholder="Search Here.." />
+
+                </div>
+                <div class="table-responsive mt-2">
+                    <div class="table table-bordered" id="data-table" width="100%" cellspacing="0">
+                        @*    <style>
+                        table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        text-align:center;
+
+                        }
+
+
+                        </style> *@
+                        <table id="data-table">
+
+                            <thead>
+                                <tr style="background-color: #c84143 !important;">
+                                    @* <th>Action</th> *@
+                                    <th>S.No</th>
+                                    <th>Company Name</th>
+                                    <th>Client Code</th>
+                                    <th>Client Name</th>
+                                    <th>Employee Code</th>
+                                    <th>Employee Name</th>
+                                    <th>Designation</th>
+                                    <th>Shift</th>
+                                    <th>Date</th>
+                                    <th>Apply Date</th>
+                                    <th>From Time</th>
+                                    <th>To Time</th>
+                                                                   
+                                    <th>Approval Status</th>
+                                    <th>Approved By ID</th>
+                                    <th>Approved By Name</th>
+                                    <th>Remarks</th>
+
+                                    <th>Status Update</th>
+                                    <th>Delete</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody class="databody">
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="~/js/IFMReports/MonthlyOutDuty.js" asp-append-version="true" ></script>
+<script src="~/js/Master.js"></script>
+
+<script src="~/js/xlxs.full.min.js"></script>
+<script>
+
+
+    function exportexcel(type, fn, dl) {
+        var ddd = $("#txtpagename").val();
+        var elt = document.getElementById('data-table');
+        filename = ddd;
+        console.log(filename);
+        console.log(elt);
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || (filename + '.' + (type || 'xlsx')));
+    }
+
+
+
+
+
+</script>
+
+
+

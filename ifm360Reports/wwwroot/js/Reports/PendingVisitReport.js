@@ -39,14 +39,14 @@ function SearchData() {
                     $(".preloader").hide();
                     var url = 'data: image/jpeg;base64,' + data[i].VisitImage
 
-                    row += `<tr id='row" + i + "'><td style=''>${parseInt(i + 1)}</td><td  style='' class='zone'>${data[i].Zone}</td><td  style='' class='branch'>${data[i].Branch}</td><td  style='' class='CustomerName'>${data[i]["Customer Name"]}</td><td style=''><span class='AsmtName'>${data[i]["Site Name"]}</span></td><td> <span class='ClientDesignation'>${data[i].Status || '' }</span></td ></tr>`;
+                    row += `<tr id='row" + i + "'><td style=''>${parseInt(i + 1)}</td><td  style='' class='zone'>${data[i].Zone}</td><td  style='' class='branch'>${data[i].Branch}</td><td  style="min-width:300px" class='CustomerName'>${data[i]["Customer Name"]}</td><td style="max-width:300px">${data[i]["Site Name"]}</td><td> <span style="" class='ClientDesignation'>${data[i].Status || '' }</span></td ></tr>`;
 
                    
 
 
                 }
 
-                $(".companybody").prepend(row);
+                $(".companybody").append(row);
                
 
 

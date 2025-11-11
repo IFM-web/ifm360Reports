@@ -18,13 +18,21 @@
                              class="img-fluid" alt="Sample image">
                     </div>
                     <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                        @if (ViewBag.message != null)
+                        {
+                            var type = ViewBag.message ?? "info";
+                            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                @ViewBag.message
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                                        </div>
+                        }
                         <form method="post">
                             <!-- Email input -->
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <label class="form-label" for="form3Example3">User Name</label>
                                 <input asp-for="uname" type="text" id="form3Example3" class="form-control form-control-lg"
                                        placeholder="User Name" />
-                              
+                                @Html.ValidationMessageFor(m => m.uname, "", new { @class = "text-danger" })
                             </div>
 
                             <!-- Password input -->
@@ -32,6 +40,7 @@
                                 <label class="form-label" for="form3Example4">Password</label>
                                 <input asp-for="pwd" type="password" id="form3Example4" class="form-control form-control-lg"
                                        placeholder="Password" />
+                                @Html.ValidationMessageFor(m => m.pwd, "", new { @class = "text-danger" })
                             
                             </div>
 
@@ -63,9 +72,9 @@
         });
     });
     
-    var message = '@ViewBag.message';
-    if (message)
-        alert(message)
+    // var message = '@ViewBag.message';
+    // if (message)
+    //     alert(message)
 
 </script>
 

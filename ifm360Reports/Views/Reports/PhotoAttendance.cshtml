@@ -68,7 +68,7 @@
 
                     </div>
                 </div>
-                	@if (HttpContextAccessor.HttpContext.Session.GetString("CustomerLevel") == "0") { 
+                
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Select Region</label>
@@ -83,7 +83,7 @@
                             }
                         </select>
                     </div>
-                </div>}
+                </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Employee No</label>
@@ -220,7 +220,7 @@
 
 
 
-<script src="~/js/Reports/AttendanceSuper.js"></script>
+<script src="~/js/Reports/PhotoAttendance.js" asp-append-version="true"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">

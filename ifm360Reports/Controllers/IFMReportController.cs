@@ -1,11 +1,12 @@
-﻿using ifm360Reports.AuthFilter;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ifm360Reports.AuthFilter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
 namespace ifm360Reports.Controllers
 {
-    [AuthenticationFilter]
+	[AuthenticationFilter]
     public class IFMReportController : Controller
     {
 
@@ -21,13 +22,13 @@ namespace ifm360Reports.Controllers
 			{
 				companyList = JsonConvert.DeserializeObject<List<SelectListItem>>(companyListJson);
 			}
-			ViewBag.Company = companyList;
+			ViewBag.Company = util.PopulateDropDown("Usp_GroupLNewAppDLL 'CompanyLogin',@Id='" + HttpContext.Session.GetString("UserName") + "'", util.strElect); 
 			return View();
         }
 
-		public JsonResult getUnifromAccetance(string Company)
+		public JsonResult getUnifromAccetance(string Company,string Region,string Branch)
 		{
-			var ds = util.Fill("exec Udp_EnployeeUniformDetails @company='"+ Company + "'", util.strElect);
+			var ds = util.Fill("exec Udp_EnployeeUniformDetails @company='"+ Company + "',@Region='"+Region+"',@Branch='"+Branch+"'", util.strElect);
 			var dt = ds.Tables[0];
 			
 			return Json(JsonConvert.SerializeObject(dt));
@@ -50,14 +51,14 @@ namespace ifm360Reports.Controllers
             {
                 companyList = JsonConvert.DeserializeObject<List<SelectListItem>>(companyListJson);
             }
-            ViewBag.Company = companyList;
+            ViewBag.Company = util.PopulateDropDown("Usp_GroupLNewAppDLL 'CompanyLogin',@Id='" + HttpContext.Session.GetString("UserName") + "'", util.strElect); 
             return View();
     }
 
-    public JsonResult getConsolidatedUniform(string Company)
+    public JsonResult getConsolidatedUniform(string Company, string Region, string Branch)
 	{
 
-        var ds = util.Fill("exec Udp_EmployeeConsolidatedUniform @Company='" + Company + "'", util.strElect);
+        var ds = util.Fill("exec Udp_EmployeeConsolidatedUniform @Company='" + Company + "',@UserId='"+ HttpContext.Session.GetString("UserName") + "',@Region='"+Region+"',@Branch='"+Branch+"'", util.strElect);
         var dt = ds.Tables[0];
 
         return Json(JsonConvert.SerializeObject(dt));

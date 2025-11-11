@@ -1,8 +1,8 @@
 ﻿
 
-$(document).ready(function () {
-    loadGridData();
-})
+//$(document).ready(function () {
+//    loadGridData();
+//})
 let myurl = localStorage.getItem('Myurl');
 function exportexcel(type, fn, dl) {
     var ddd = $("#txtpagename").val();
@@ -288,13 +288,18 @@ function loadGridData()
 {
     $(".preloader").show();
     var Company = $("#CompanyCodeid").val();
+    var RegionId = $("#RegionId").val();
+    var branchid = $("#branchid").val();
+ 
 
 
     $.ajax({
         url: myurl + '/IFMReport/getUnifromAccetance',
         type: 'GET',
         data: {
-            Company: Company
+            Company: Company,
+            Region: RegionId,
+            Branch: branchid
         },
         success: function (data) {
             $(".preloader").hide();
@@ -302,10 +307,15 @@ function loadGridData()
             if (data && data.length > 0) {
                 var sno = 1;
                 var Data = JSON.parse(data);
+                console.log(Data)
                 for (var i = 0; i < Data.length; i++) {
                     var row = '<tr>';
                     row += '<td>' + sno++ + '</td>';
                     row += '<td>' + Data[i].Company + '</td>';
+                    row += '<td>' + Data[i].HrLocationDesc + '</td>';
+                    row += '<td>' + Data[i].LocationDesc + '</td>';
+                    row += '<td>' + Data[i].ClientName + '</td>';
+                    row += '<td>' + Data[i].AsmtName + '</td>';
                     row += '<td>' + Data[i].EmpCode + '</td>';                   
                     row += '<td>' + Data[i].EmpName + '</td>';
                     row += '<td>' + Data[i].Date + '</td>';
@@ -342,6 +352,7 @@ function ShowModel(LocId, EmpCode) {
 
                 <td>${item.date}</td>
                 <td>${item.UniformItem}</td>
+                <td>${item.Quantity}</td>
                 <td> <img data-toggle='modal' data-target='#myModal' style="width: 100px;height: 100px;" onclick='image("${url}")' src='${url}'/></td>
                 
                 </tr > `;
@@ -379,4 +390,53 @@ function resetImageRotation() {
     var image = document.getElementById('img01');
     image.style.transform = 'rotate(0deg)';
 }
-  
+
+
+function bindRegion(id) {
+    $.ajax({
+
+        url: myurl + '/Home/bindRegion2',
+        type: 'post',
+        data: { id: id },
+        success: function (data) {
+
+            var data = JSON.parse(data);
+
+            var dropdown = $('#RegionId');
+            dropdown.empty();
+            dropdown.append('<option value"All">All</option>')
+            for (var i = 0; i < data.length; i++) {
+
+                dropdown.append($('<option></option>').attr('value', data[i].HrLocationCode).text(data[i].HrLocationDesc));
+            }
+
+            $('#branchid').val("All")
+        },
+        error: function (error) {
+            alert(error.massage);
+        }
+    })
+}
+function bindbranch() {
+    $.ajax({
+
+        url: myurl + '/Home/bindBranch2',
+        type: 'post',
+        data: { id: $("#CompanyCodeid").val(), locid: $("#RegionId").val() },
+        success: function (data) {
+            var data = JSON.parse(data);
+
+            var dropdown = $('#branchid');
+            dropdown.empty();
+            dropdown.append('<option value"All">All</option>')
+            for (var i = 0; i < data.length; i++) {
+
+                dropdown.append($('<option></option>').attr('value', data[i].LocationAutoID).text(data[i].LocationCode));
+            }
+
+        },
+        error: function (error) {
+            alert(error.massage);
+        }
+    })
+}

@@ -265,6 +265,60 @@
 			color: white;
 			padding: 5px 16px;
 		}
+		.navbar{
+			padding: 0px !important;
+			background-color: #ffffff !important;
+			border: none !important;
+			border-radius: 0 !important;
+			box-shadow: 1px 1px 3px rgb(0 0 0 / 10%) !important;
+			position: fixed !important;
+			width: 100% !important;
+			z-index: 9999 !important;
+		}
+
+		.list-unstyled  li a {
+			text-decoration:none !important;
+		}
+
+		#data-table th {
+			background-color: #c84143 !important;
+			color: #fff;
+		}
+
+		.dropdown .user-info {
+			padding: 12px 16px;
+			border-bottom: 1px solid #ccc;
+			text-align:left;
+		}
+
+		.dropdown .menu-option {
+			padding: 10px 16px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			border-top: 1px solid #eee;
+		}
+
+		a.dropdown-item {
+			border-radius: 9px;
+			color: white;
+		}
+
+		/* my style */
+		/* Highlight active submenu */
+		.components a.active-link {
+			color: #fff !important;
+			background-color: #dc3545 !important;
+			border-radius: 4px;
+		}
+
+	
+		/* Optional: highlight the parent when expanded */
+		.components .dropdown-toggle[aria-expanded="true"] {
+			font-weight: bold;
+			color: #007bff;
+		}
+
 
 	</style>
 
@@ -280,25 +334,33 @@
 
 	<div style="display:flex;">
 		<div style="background: #ffffff;">
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px !important;
+			background-color: #ffffff !important;
+			border: none !important;
+			border-radius: 0 !important;
+			box-shadow: 1px 1px 3px rgb(0 0 0 / 10%) !important;
+			position: fixed !important;
+			width: 100% !important;
+			z-index: 9999 !important;">
 				
 				<div class="container-fluid" @*style="margin-top: -55px;"*@>
 					<input type="hidden" id="UserId" value="@HttpContextAccessor.HttpContext.Session.GetString("Id")" />
-					@* <input type="hidden" name="UserSessionId" class="col"id="UsersessionId" value="1@(HttpContextAccessor.HttpContext.Session.Id)" /> *@
+			
 					<input type="hidden" name="SessionId" class=""id="sessionId" value="@(HttpContextAccessor.HttpContext.Session.Id)" />
-					@* <input type="hidden" name="UserName" class="col"id="uname" value="@HttpContextAccessor.HttpContext.Session.GetString("Username")" /> *@
+				
 					<input type="hidden" name="BranchId" class="" id="cid" value="@HttpContextAccessor.HttpContext.Session.GetString("Branchid")" />
 					<input type="hidden" name="ProfileId" class="" id="pid" value="@HttpContextAccessor.HttpContext.Session.GetString("ProfileId")" />
-					@* <input type="hidden" name="TranId" class=""id="tranid" value="@date.ToString("yyyyMMddHHmmssfff")"/> *@
+				
 					<input type="hidden" name="TranId" class="" id="tranid" value="@(DateTime.Now.ToString("yyyyMMddHHmmssfff"))" />
-					@* <input type="hidden" name="MenuUrl" class="col" id="Menuurl" value=""/> *@
+				
 					<input type="hidden" name="Guid" class="" id="guid" value="@guidno" />
 					<div class="sidebar-header">
-						<a href="@Url.Action("Dashboard", "Admin")">
+						<a href="#">
 							<img src="~/GroupL.jfif" style="width: 240px;height: 79px; margin-left: -15px; margin-right:20px; background-color: white;" />
 						</a>
 					</div>
-					<button type="button" id="sidebarCollapse" class="btn btn-info">
+					<button type="button" id="sidebarCollapse" class="btn btn-info" style="    background: none;
+    border: none;">
 						<i class="fas fa-align-left"></i>
 					</button>
 					<button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -313,11 +375,21 @@
 									 style="width:135px; height: 71px; margin:-10px 0px 0 -227px; border-radius: 100%;position: absolute;" />
 								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><p class="valname">@HttpContextAccessor.HttpContext.Session.GetString("UserName")</p></a>
 								
-								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-									<a class="dropdown-item" href="@Url.Action("Logout", "Home")">Logout<i class="fas fa-sign-out-alt"></i></a>
-									@* <a class="dropdown-item" href="@Url.Action("ChangePassword", "Admin")">Change Password<i class=""></i></a> *@
+								<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="min-width:350px;">
+									@* <a class="dropdown-item" href="@Url.Action("Logout", "Home")">Logout<i class="fas fa-sign-out-alt"></i></a> *@
+									
+									<div class="user-info">
+										
+										<p>Company Name : @HttpContextAccessor.HttpContext.Session.GetString("CompanyName")</p>
+										<p>Region Name : @HttpContextAccessor.HttpContext.Session.GetString("RegionName")</p>
+										<p>Branch Name : @HttpContextAccessor.HttpContext.Session.GetString("BranchName")</p>
+									</div>
 
+									<div class="menu-option red" >
+										<a class="dropdown-item branchbtn btn-danger" href="@Url.Action("Logout", "Home")">Logout<i class="fas fa-sign-out-alt"></i></a>
+									</div>
 								</div>
+							
 							</li>
 						</ul>
 					</div>
@@ -391,62 +463,11 @@
 						</div>
 					</div>
 				</div>
-				
-				<ul class="list-unstyled components">
-					
-
-					<li class="active">
-						@if (HttpContextAccessor.HttpContext.Session.GetString("UserName") != "HRAdmin")
-						{
-						<a href="~/Home/BranchLogin" class="branchbtn"><span>Branch Selection</span></a>
-						}
-						<a data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed" href="#rpt"><span>Attendance Reports</span></a>
-						
-						<ul class="list-unstyled collapse" id="rpt" style="">
-							@if (HttpContextAccessor.HttpContext.Session.GetString("UserName") != "HRAdmin")
-							{
-							<li><a href="~/Reports/PhotoAttendance"><span>Photo Attendance</span></a></li>
-							<li><a href="~/Reports/AttendanceSuper"><span>Attendance Super</span></a></li>
-							<li><a href="~/Reports/AttendanceSuperWithOutImage"><span>Attendance Super WithOut Image</span></a></li>
-							<li><a href="~/Reports/shortagereport"><span>Emp Shortage Report</span></a></li>
-							<li><a href="~/Reports/ShortageReportClientWise"><span>Site Shortage Report</span></a></li>		
-							<li><a href="~/Reports/outofrange"><span>Out Of Range Report</span></a></li>
-								}
-@if (HttpContextAccessor.HttpContext.Session.GetString("UserName") == "HRAdmin")
-						{
-							<li><a href="~/Reports/LeaveDate"><span>Monthly Leave Report</span></a></li>
-							<li><a href="~/Reports/Regularization"><span>Monthly Regularization Report</span></a></li>
-						}
-						</ul>
-						@if (HttpContextAccessor.HttpContext.Session.GetString("UserName") != "HRAdmin")
-						{
-							<a data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed" href="#IFR"><span>IFM Reports </span></a>
-							<ul class="list-unstyled collapse" id="IFR" style="">
-
-								<li><a href="~/Reports/ConsolidatedVisitReport"><span>Consolidated Visit Report</span></a></li>
-
-								<li><a href="~/Reports/PendingVisitReport"><span>Pending Visit Report</span></a></li>
-								<li><a href="~/Reports/AuditStatusReport"><span> Audit Status Report</span></a></li>
-								<li><a href="~/Reports/AppointmentLetterAcceptance"><span> Appointment Letter Acceptance Report</span></a></li>
-								<li><a href="~/IFMReport/UniformAccpten"><span> Uniform Acceptance Report</span></a></li>
-
-								<li><a href="~/IFMReport/ConsolidatedUniform"><span> Consolidated Uniform  Report</span></a></li>
-
-							</ul>
-
-						}
-
-							</li>
-
-						
-
-
-
-
-					</ul>
-						
-
 			
+				@await Component.InvokeAsync("Menu")
+			
+
+
 			</nav>
 		</div>
 
@@ -466,7 +487,9 @@
 			charset="utf8"
 			src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
 	<script src="@Url.Content("~/js/xlxs.full.min.js")"></script>
-
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 	<script type="text/javascript">
 		// $(document).ready(function () {
 		// 	$(document).on('contextmenu', function (e) {
@@ -474,181 +497,144 @@
 		// 	});
 		// });
 
+		// function toggleDropdown(event) {
+		// 	document.querySelectorAll(".dropdown-items").forEach(link => {
+		// 		console.log(link)
+		// 	  link.style.display = "none";
+		//    });
+
+		// 	const toggle = event.currentTarget; // <a> tag
+		// 	const dropdown = toggle.nextElementSibling; // <ul> element
+		// 	const arrowIcon = toggle.querySelector('.dropdown-arrow'); // <i class="dropdown-arrow">
+
+		// 	// Toggle dropdown visibility
+		// 	if (dropdown.style.display === "block") {
+		// 		dropdown.style.display = "none";
+		// 		toggle.classList.remove("open");
+		// 	} else {
+		// 		dropdown.style.display = "block";
+		// 		toggle.classList.add("open");
+		// 	}
+
+		// 	// Toggle arrow rotation (handled by CSS)
+		// 	if (arrowIcon) {
+		// 		arrowIcon.classList.toggle("rotate-up");
+		// 	}
+		// }
+
+
+		//    document.addEventListener("DOMContentLoaded", function () {
+		// 	   let currentUrl = window.location.pathname.toLowerCase();
+
+		// 	   document.querySelectorAll(".sidebar-link, .dropdown-item").forEach(link => {
+		// 		   let href = link.getAttribute("href")?.toLowerCase();
+
+		// 		   if (href && currentUrl.includes(href)) {
+		// 			   link.classList.add("active");
+
+
+		// 			   let parentDropdown = link.closest(".dropdown-items");
+		// 			   if (parentDropdown) {
+		// 				   parentDropdown.style.display = "block";
+		// 			   }
+		// 		   }
+		// 	   });
+		//    });
+
+
 
 	
 
-		function initMenu() {
-			$('#menu ul').hide();
-			$('#menu ul').children('.current').parent().show();
-			//$('#menu ul:first').show();
-			$('#menu li a').click(
-				function () {
-					var checkElement = $(this).next();
-					if ((checkElement.is('ul')) && (checkElement.is(':visible'))) {
-						return false;
-					}
-					if ((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
-						$('#menu ul:visible').slideUp('normal');
-						checkElement.slideDown('normal');
-						return false;
-					}
+		// function initMenu() {
+		// 	$('#menu ul').hide();
+		// 	$('#menu ul').children('.current').parent().show();
+		// 	//$('#menu ul:first').show();
+		// 	$('#menu li a').click(
+		// 		function () {
+		// 			var checkElement = $(this).next();
+		// 			if ((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+		// 				return true;
+		// 			}
+		// 			if ((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+		// 				$('#menu ul:visible').slideUp('normal');
+		// 				checkElement.slideDown('normal');
+		// 				return true;
+		// 			}
+		// 		}
+		// 	);
+		// }
+		
+	$(document).ready(function () {
+		// Get current page URL (lowercase and trimmed)
+		var currentUrl = window.location.pathname.toLowerCase();
+		//console.log(currentUrl);
+		// Loop through all sidebar menu links
+			$('.components a').each(function () {
+			var linkUrl = $(this).attr('href');
+			
+			if (!linkUrl) return;
+
+			// Clean ~/ or trailing slashes
+			var cleanUrl = linkUrl.replace('~', '').toLowerCase().replace(/\/$/, '');
+			
+			// If current URL contains this link
+			if (currentUrl.indexOf(cleanUrl) !== -1 && cleanUrl.length > 1) {
+				// Add highlight class
+				$(this).addClass('active-link');
+
+				// Expand parent menu if exists
+				var parentCollapse = $(this).closest('.collapse');
+				if (parentCollapse.length) {
+					parentCollapse.addClass('show');
+					parentCollapse.prev('.dropdown-toggle')
+						.attr('aria-expanded', 'true')
+						.removeClass('collapsed');
 				}
-			);
-		}
 
-		function dtable() {
-			var myTable = $("#data-table");
-			var thead = myTable.find("thead");
-			var thRows = myTable.find("tr:has(th)");
-			if (thead.length === 0) {  //if there is no thead element, add one.
-				thead = $("<thead></thead>").appendTo(myTable);
+				// Stop after first match
+				return false;
 			}
-			var copy = thRows.clone(true).appendTo("thead");
-			thRows.remove();
-			myTable.dataTable();
-		}
-
-		function dtablebom() {
-			var myTable = $("#bomtable");
-			var thead = myTable.find("thead");
-			var thRows = myTable.find("tr:has(th)");
-			if (thead.length === 0) {  //if there is no thead element, add one.
-				thead = $("<thead></thead>").appendTo(myTable);
-			}
-			var copy = thRows.clone(true).appendTo("thead");
-			thRows.remove();
-			myTable.dataTable();
-		}
-
-
-
-
-		function ShowSODet(jsondata, divele, modalid) {
-			url_add = window.location.href;
-			var data = url_add.split("://");
-			data = data[1].split("/");
-			var url_add = window.location.protocol + "//" + window.location.host + "/";
-			var url = url_add + 'api/ApiServices/SaveTransactions';
-
-			$("#" + modalid + "").modal('show');
-			$.ajax({
-				url: url,
-				data: { jsonData: JSON.stringify(jsondata) },
-				type: "POST",
-				//contentType: var_ct,
-				dataType: "json",
-				success: function (data) {
-					console.log(data);
-					if (data.Message != "") {
-						swal("Message", data.Message, data.Status == "Success" ? "success" : "error");
-					}
-					if (data.Message == "Success") {
-						clear();
-					}
-					CreateTableFromlayout(data.Data, divele);
-
-				},
-				error: function (data) {
-					var data = {
-						status: "Error",
-						msg: "Error on server.",
-						data: [],
-					}
-
-				},
-			});
-		}
-		//}
-
-
-
-
-
-
-		$(document).ready(function () {
-			$('#sidebarCollapse').on('click', function () {
-				$('#sidebar').toggleClass('active');
-			});
 		});
 
-		function CreateTableFromlayout(arrItems, divid) {
-			let col = [];
-			for (let i = 0; i < arrItems.length; i++) {
-				for (let key in arrItems[i]) {
-					if (col.indexOf(key) === -1) {
-						col.push(key);
-					}
-				}
-			}
+		// Toggle menu expand/collapse
+			$('.components .dropdown-toggle').on('click', function (e) {
+			var $this = $(this);
+			var $target = $($this.attr('href'));
 
-			// Create a Table.
-			let table = document.createElement("table");
-			table.setAttribute('id', 'data-table1');
-			table.setAttribute('class', 'table table-bordered');
-			// Create table header row.
+			// Close all open menus except this one
+			// $('.components .collapse.show').not($target).slideUp(200).removeClass('show')
+			// 	.prev('.dropdown-toggle')
+			// 	.addClass('collapsed')
+			// 	.attr('aria-expanded', 'false');
 
-			let tr = table.insertRow(-1);		// table row.
+			// Toggle current one
+			$target.slideToggle(200).toggleClass('show');
+			var expanded = $target.hasClass('show');
+			$this.attr('aria-expanded', expanded).toggleClass('collapsed', !expanded);
 
-			for (let i = 0; i < col.length; i++) {
-				let th = document.createElement('th');  // table header.
-				//console.log(col[i]);
-				th.innerHTML = col[i];
-				var result = col[i].includes("Hid_") == true ? 'none' : '';
-				tr.appendChild(th);
-				th.setAttribute('style',
-					'font:18px Calibri;border: solid 1px #DDD;' +
-					'border-collapse: collapse; font-weight:bold;' +
-					'padding: 2px 3px; text-align: center;' +
-					'display:' + result + ';'
-				);
-			}
+			e.preventDefault();
+		});
 
-			// Add JSON to the table as rows.
-			for (let z = 0; z < arrItems.length; z++) {
-				tr = table.insertRow(-1);
-
-				for (let j = 0; j < col.length; j++) {
-					let tabCell = tr.insertCell(-1);
-					var result = col[j].includes("Hid_") == true ? 'none' : '';
-					tabCell.innerHTML = arrItems[z][col[j]];
-					tabCell.setAttribute('style',
-						'font:18px Calibri;border: solid 1px #DDD;' +
-						'border-collapse: collapse; ' +
-						'padding: 2px 3px; text-align: center;' +
-						'color:black;' +
-						'display:' + result + ';'
-					);
-					tabCell.setAttribute('class', "" + col[j].replace(" ", "") + "");
-					tabCell.setAttribute('id', "" + col[j].replace(" ", "") + "" + z + "");
-
-				}
-			}
-
-			// Show the table.
-			let container = document.getElementById('' + divid + '');
-			container.innerHTML = '';
-			container.appendChild(table);
+		// Sidebar toggle
+		$('#sidebarCollapse').on('click', function () {
+			$('#sidebar').toggleClass('active');
+		});
+	});
 
 
-			//jQuery.noConflict();
-			//(function ($jq) {
-			//    var myTable = $jq("#data-table");
-			//    var thead = myTable.find("thead");
-			//    var thRows = myTable.find("tr:has(th)");
-			//    if (thead.length === 0) {  //if there is no thead element, add one.
-			//        thead = $jq("<thead></thead>").appendTo(myTable);
-			//    }
-			//    var copy = thRows.clone(true).appendTo("thead");
-			//    thRows.remove();
-			//    myTable.dataTable();
-			//})(jQuery);
+		
 
+		// $(document).ready(function () {
+		// 	$('#sidebarCollapse').on('click', function () {
+		// 		$('#sidebar').toggleClass('active');
+		// 	});
+		// });
 
-		}
+		
 		
 	</script>
-	<script>
-		initMenu();
-	</script>
+	 <script>
+	// 	initMenu();
+	// </script>
 </body>
 </html>

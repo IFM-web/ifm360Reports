@@ -1,14 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using ifm360Reports.AuthFilter;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 
 namespace ifm360Reports.Controllers
 {
+    [AuthenticationFilter]
     public class AdminController : Controller
     {
         db_Utility db = new db_Utility();
-        public IActionResult UserMapToCustomer()
+        public IActionResult UserMapToBranch()
         {
             ViewBag.Company = db.PopulateDropDown("exec Usp_GroupLNewAppDLL 'Company'", db.strElect);
 
@@ -24,25 +30,137 @@ namespace ifm360Reports.Controllers
             var ds = db.Fill("exec Usp_GroupLNewAppDLL 'Customer', @Id='" + Company + "'", db.strElect);
             return Json(JsonConvert.SerializeObject(ds.Tables[0]));
         }
+        
+        [HttpPost]
+        public JsonResult bindCustomertoMap(string Id)
+        {
+            var ds = db.Fill("exec Usp_GroupLNewAppDLL 'Customer', @Id='" + Id + "'", db.strElect);
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+        }
+        
+        [HttpPost]
+        public JsonResult bindRegion(string[] Id)
+        {
+            string result = string.Join(",", Id.Select(x => $"{x}"));
+            DataSet ds = db.Fill($"exec udp_GetReportPortalMappingDDL 'Region', @CompanyCode='{result}' ", db.strElect);
+            DataTable dt = ds.Tables[0];
+            var data = JsonConvert.SerializeObject(dt);
+            return Json(data);
+        }
 
         [HttpPost]
-        public JsonResult SaveUserMapping(string UserId, string Customer,string CustomerName)
+        public JsonResult SaveUserMapping(string UserId, string Company, string Region, string[] Branch)
         {
+            string Branchs = string.Join(",", Branch.Select(x => $"{x}"));
+            var ds = db.Fill($"exec [Usp_GroupLNewApp_UserMapping] @UserId='{UserId}', @Company='{Company}',@Region='{Region}',@Branch='{Branchs}'", db.strElect);
 
-            var ds = db.Fill("exec Usp_GroupLNewApp_UserMapping @UserId='" + UserId + "', @Customer='" + Customer + "',@CustomerName='"+CustomerName+"'", db.strElect);
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+
+        }
+
+        [HttpPost]
+        public JsonResult SaveCustomerMapping(string UserId,  string[] Customer)
+        {
+            string Customers = string.Join(",", Customer.Select(x => $"{x}"));
+            var ds = db.Fill($"exec [Usp_GroupLNewApp_UserCustomerMapping] @UserId='{UserId}', @Customer='{Customers}'", db.strElect);
+
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+
+        }
+
+        [HttpPost]
+        public JsonResult DeleteCustomerMap(string UserId)
+        {
+          
+            var ds = db.Fill($"exec [Usp_GroupLNewAppDLL] 'DeleteCustomerMap' ,@Id='{UserId}'", db.strElect);
+
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+
+        }
+
+        [HttpPost]
+        public JsonResult DeleteBranchMap(string Id)
+        {
+          
+            var ds = db.Fill($"exec [Usp_GroupLNewAppDLL] 'DeleteBranchMap' ,@Id='{Id}'", db.strElect);
 
             return Json(JsonConvert.SerializeObject(ds.Tables[0]));
 
         }
         [HttpGet]
-        public JsonResult ShowUserMapping()
+        public JsonResult ShowUserMapping(string UserId)
         {
 
-            var ds = db.Fill("exec Usp_GroupLNewAppDLL 'UserMapList'", db.strElect);
+            var ds = db.Fill($"exec Usp_GroupLNewAppDLL 'UserMapList',@Id='{UserId}'", db.strElect);
 
             return Json(JsonConvert.SerializeObject(ds.Tables[0]));
 
         }
+        [HttpGet]
+        public JsonResult UserBranchList(string UserId,string Company,string Region)
+        {
+
+            var ds = db.Fill($"exec Usp_GroupLNewAppDLL 'UserBranchList',@Id='{UserId}',@Id2='{Company}',@Id3='{Region}'", db.strElect);
+
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+
+        }
+        [HttpGet]
+        public JsonResult ShowCustomerMapping(string UserId)
+        {
+
+            var ds = db.Fill($"exec Usp_GroupLNewAppDLL 'CustomerMapList' ,@Id='{UserId}'", db.strElect);
+
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+
+        }
+
+
+        public IActionResult UserMapToCustomer()
+        {
+            ViewBag.User = db.PopulateDropDown("exec Usp_GroupLNewAppDLL 'User'", db.strElect);
+            ViewBag.Customer = db.PopulateDropDown("exec Usp_GroupLNewAppDLL 'Customer'", db.strElect);
+            return View();
+        }
+
+
+        public IActionResult MenuRight()
+        {
+            ViewBag.User = db.PopulateDropDown("exec Usp_GroupLNewAppDLL 'User'", db.strElect);
+            ViewBag.MenuParent = db.PopulateDropDown("exec Usp_GroupLNewAppDLL 'MenuParent'", db.strElect);
+            return View();
+        }
+        public JsonResult showMenuRight(string parentMenu, string user)
+        {
+            string query = "exec Usp_GroupLNewAppDLL 'MenuRight',@ParentMenuName='" + parentMenu + "',@Id='"+ user + "'";
+            DataSet ds = db.Fill(query, db.strElect);
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+        }
+        [HttpPost]
+        public JsonResult saveMenuRight()
+        {
+            var data = Request.Form["data"];
+            DataTable dt = JsonConvert.DeserializeObject<DataTable>(data);
+            using (SqlConnection conn = new SqlConnection(db.strElect))
+            using (SqlCommand cmd = new SqlCommand("Usp_GroupLNewApp_MenuRightsMapping", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+
+                SqlParameter tvpParam = cmd.Parameters.AddWithValue("@data", dt);
+                tvpParam.SqlDbType = SqlDbType.Structured;
+                tvpParam.TypeName = "GroupLMenuRights";
+
+                DataTable result = new DataTable();
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    da.Fill(result);
+
+                }
+                return Json(JsonConvert.SerializeObject(result));
+            }
+        }
+
     }
   
 }

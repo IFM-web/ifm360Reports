@@ -31,6 +31,7 @@ function SearchData() {
                 $(".companybody").empty();
                 var data = JSON.parse(data);
                 console.log(data)
+              
                 var rowlen = parseInt($('.companybody tr').length);
                 // console.log(data)
                 var row = '';

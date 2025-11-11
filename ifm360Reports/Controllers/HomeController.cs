@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Data;
 using System.Diagnostics;
-
+using ifm360Reports.AuthFilter;
 namespace ifm360Reports.Controllers
 {
     public class HomeController : Controller
@@ -20,7 +20,7 @@ namespace ifm360Reports.Controllers
         {
             _logger = logger;
         }
-
+        [AuthenticationFilter]
         public IActionResult Index()
         {
             return View();
@@ -35,94 +35,74 @@ namespace ifm360Reports.Controllers
         public IActionResult Login(Adm_User obj)
         {
 
-            if(obj.uname=="HRAdmin" && obj.pwd == "HRAdmin")
+            if (ModelState.IsValid)
             {
-                HttpContext.Session.SetString("UserName", "HRAdmin");
-                return RedirectToAction("LeaveDate", "Reports");
-            }
-            var ds = util.Fill("exec udp_ValidateLogin @Userid ='" + obj.uname + "',@Password='" + obj.pwd + "'", util.strElect);
-         
-            
+                if (obj.uname.Trim() == "HRAdmin" && obj.pwd == "HRAdmin")
+                {
+                    HttpContext.Session.SetString("UserName", "HRAdmin");
+                    return RedirectToAction("LeaveDate", "Reports");
+                }
+                var ds = util.Fill("exec udp_ValidateLogin2 @Userid ='" + obj.uname.Trim() + "',@Password='" + obj.pwd + "'", util.strElect);
+
+
                 string errorMessage = ds.Tables[0].Rows[0][1].ToString();
 
                 if (errorMessage != "Invalid Username")
                 {
-                if (errorMessage != "Incorrect Password")
-                {
-                    HttpContext.Session.SetString("UserName", (obj.uname.ToString()).ToUpper());
-                    HttpContext.Session.SetString("password", (obj.pwd.ToString()).ToUpper());
-
-                    if( Convert.ToInt16(ds.Tables[0].Rows[0]["CustomerLevel"].ToString())==1)
+                    if (errorMessage != "Incorrect Password")
                     {
-                     
-                        string[] Customer = ds.Tables[0].Rows[0]["Customer"].ToString().Split(",");
+                        HttpContext.Session.SetString("UserName", (obj.uname.ToString()).ToUpper());
+                        HttpContext.Session.SetString("password", (obj.pwd.ToString()).ToUpper());
 
-                        string[] CustomerName = ds.Tables[0].Rows[0]["CustomerName"].ToString().Split(",");
-                        for (var i = 0; i < Customer.Length; i++)
+
+                        //string[] compcode = ds.Tables[0].Rows[0][0].ToString().Split(",");
+                        //string[] compdesc = ds.Tables[0].Rows[0][1].ToString().Split(",");
+
+                        List<SelectListItem> list = new List<SelectListItem>();
+
+
+                        foreach (DataRow row in ds.Tables[0].Rows)
                         {
-                            CustomerList.Add(new SelectListItem
+                            list.Add(new SelectListItem
                             {
-                                Text = CustomerName[i],
-                                Value = Customer[i],
+                                Text = row["CompanyDesc"].ToString(),
+                                Value = row["CompanyCode"].ToString(),
                             });
                         }
-                        HttpContext.Session.SetString("Key", JsonConvert.SerializeObject(CustomerList));
-                        HttpContext.Session.SetString("CustomerLevel", ds.Tables[0].Rows[0]["CustomerLevel"].ToString());
-                        return RedirectToAction("PhotoAttendance", "Reports");
-                    }
-                    else
-                    {
 
-                 
-                    string[] compcode = ds.Tables[0].Rows[0][0].ToString().Split(",");
-                    string[] compdesc = ds.Tables[0].Rows[0][1].ToString().Split(",");
 
-                    List<SelectListItem> list = new List<SelectListItem>();
-                    
-
-                    for(var i = 0; i < compcode.Length; i++)
-                    {
-                        list.Add(new SelectListItem
+                        if (obj.uname.ToUpper() == "HDBADMIN" && obj.pwd.ToUpper() == "ADMIN@123")
                         {
-                            Text = compdesc[i],
-                            Value = compcode[i],
-                        });
-                    }
-                        HttpContext.Session.SetString("CustomerLevel", ds.Tables[0].Rows[0]["CustomerLevel"].ToString());
-                        HttpContext.Session.SetString("CompanyList", JsonConvert.SerializeObject(list));
+                            HttpContext.Session.SetString("companyid", "GroupLHelpfulPeo");
+                            HttpContext.Session.SetString("locationid", "North");
+                            HttpContext.Session.SetString("branchid", "20909");
+                            return RedirectToAction("ConsolidatedVisittoReport", "Reports");
+                        }
+                        else
+                        {
+                            return RedirectToAction("BranchLogin", "Home");
+                        }
 
-                    if(obj.uname.ToUpper() == "HDBADMIN" && obj.pwd.ToUpper() == "ADMIN@123" )
-                    {
-                        HttpContext.Session.SetString("companyid", "GroupLHelpfulPeo");
-                        HttpContext.Session.SetString("locationid", "North");
-                        HttpContext.Session.SetString("branchid", "20909");
-                        return RedirectToAction("ConsolidatedVisittoReport", "Reports");
+
+
                     }
                     else
                     {
-                        return RedirectToAction("BranchLogin", "Home");
+                        ViewBag.message = errorMessage;
                     }
-                    }
-
 
                 }
                 else
                 {
                     ViewBag.message = errorMessage;
                 }
-
-                }
-                else
-                {
-                    ViewBag.message = errorMessage;
-                }
-            
+            }
            
 
             return View();
         }
       
-        public IActionResult BranchLogin(DataSet data)
+        public IActionResult BranchLogin()
 
         {
             //ViewBag.company = util.PopulateDropDown("exec udp_GetReportPortalCompany", util.strElect);
@@ -133,15 +113,16 @@ namespace ifm360Reports.Controllers
                 return RedirectToAction("Login", "Home");
             }
             ViewBag.Region = util.PopulateDropDown("exec udp_GetReportPortalCompany", util.strElect);
-            var companyListJson = HttpContext.Session.GetString("CompanyList");
-            List<SelectListItem> companyList = null;
+            ViewBag.Company = util.PopulateDropDown("Usp_GroupLNewAppDLL 'CompanyLogin',@Id='" + HttpContext.Session.GetString("UserName") + "'", util.strElect);
+            //var companyListJson = HttpContext.Session.GetString("CompanyList");
+            //List<SelectListItem> companyList = null;
 
-            if (!string.IsNullOrEmpty(companyListJson))
-            {
-                companyList = JsonConvert.DeserializeObject<List<SelectListItem>>(companyListJson);
-            }
+            //if (!string.IsNullOrEmpty(companyListJson))
+            //{
+            //    companyList = JsonConvert.DeserializeObject<List<SelectListItem>>(companyListJson);
+            //}
 
-            ViewBag.Company = companyList;
+            //ViewBag.Company = companyList;
 
             return View();
             
@@ -156,7 +137,16 @@ namespace ifm360Reports.Controllers
                 HttpContext.Session.SetString("companyid", obj.companyid.ToString());
                 HttpContext.Session.SetString("locationid", obj.location_id.ToString());
                 HttpContext.Session.SetString("branchid", obj.branch_id.ToString());
-                return RedirectToAction("PhotoAttendance", "Reports");
+                var ds = util.Fill("exec [Usp_GroupLNewAppDLL] 'GetLoginDetails' ,@Id='" + HttpContext.Session.GetString("UserName") + "',@Id2='"+ obj.branch_id + "' ", util.strElect);
+                if (ds.Tables.Count > 0)
+                {
+                    HttpContext.Session.SetString("CompanyName", ds.Tables[0].Rows[0]["Company"].ToString());
+                    HttpContext.Session.SetString("BranchName", ds.Tables[0].Rows[0]["Branch"].ToString());
+                    HttpContext.Session.SetString("RegionName", ds.Tables[0].Rows[0]["Region"].ToString());
+                    return RedirectToAction("Index", "Home");
+
+                }
+                
             }
             else
             {
@@ -168,7 +158,15 @@ namespace ifm360Reports.Controllers
 
         public JsonResult bindRegion(string id)
         {
-            DataSet ds = util.Fill("exec udp_GetReportPortalRegion @CompanyCode='"+id+"' ",util.strElect);
+            DataSet ds = util.Fill("exec udp_GetReportPortalRegion  @CompanyCode='" + id+"' ",util.strElect);
+           DataTable dt = ds.Tables[0];
+            var data = JsonConvert.SerializeObject(dt);
+            return Json(data);
+        }
+
+        public JsonResult bindRegion2(string id)
+        {
+            DataSet ds = util.Fill("exec Usp_GroupLBranchLogin 'Region', @CompanyCode='" + id+"',@UserId='"+HttpContext.Session.GetString("UserName") +"' ",util.strElect);
            DataTable dt = ds.Tables[0];
             var data = JsonConvert.SerializeObject(dt);
             return Json(data);
@@ -176,6 +174,13 @@ namespace ifm360Reports.Controllers
         public JsonResult bindBranch(string id, string locid)
         {
             DataSet ds = util.Fill("exec udp_GetReportPortalBranch @CompanyCode='" + id+ "', @HrLocationCode='"+locid+"' ", util.strElect);
+           DataTable dt = ds.Tables[0];
+            var data = JsonConvert.SerializeObject(dt);
+            return Json(data);
+        }
+        public JsonResult bindBranch2(string id, string locid)
+        {
+            DataSet ds = util.Fill("exec Usp_GroupLBranchLogin 'Branch', @CompanyCode='" + id+ "', @Region='" + locid+ "',@UserId='"+HttpContext.Session.GetString("UserName") +"'  ", util.strElect);
            DataTable dt = ds.Tables[0];
             var data = JsonConvert.SerializeObject(dt);
             return Json(data);

@@ -14,8 +14,6 @@ namespace ifm360Reports
     {
         ClsUtility util = new ClsUtility();
 
-		
-		//public string strElect = "Data Source=103.253.125.179,5000);Initial Catalog=neerajbakshi;User ID=neerajbakshi;Password=n@bakshi#!1;Persist Security Info=True";
 
 
         public string strElect = "Data Source=172.16.3.2;Initial Catalog=SAMS;User ID=sa;Password=sqlserver@2018!@#;Persist Security Info=True;Connect Timeout=0";

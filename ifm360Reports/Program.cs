@@ -1,7 +1,9 @@
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>
 {
@@ -9,7 +11,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(240);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-   
+    options.Cookie.MaxAge= TimeSpan.FromMinutes(240);
+
 });
 
 
@@ -22,10 +25,10 @@ if (!app.Environment.IsDevelopment())
 
     app.UseHsts();
 }
+app.UseSession();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSession();
 
 app.UseRouting();
 

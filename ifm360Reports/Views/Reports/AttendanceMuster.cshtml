@@ -1,0 +1,335 @@
+﻿
+@{
+    ViewData["Title"] = "AttendanceMuster";
+    Layout = "~/Views/Shared/_MainLayout1.cshtml";
+  
+}
+
+
+
+
+<style>
+    .preloader {
+        width: 90px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+    }
+
+    th.days {
+        height: 140px;
+        white-space: nowrap;
+  /* horizontal-align: center; */
+        background-color: red;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #444;
+        padding: 6px 10px;
+        text-align: center;
+    }
+
+    th {
+        background: #1F4E78;
+        color: white;
+    }
+
+    .P {
+        color: #4CAF50;
+    }
+
+    .A {
+        color: #F44336;
+    }
+
+    .L {
+        color: #FFCDD2;
+    }
+    .R{
+        color: #FFBE00;
+    }
+    .HD {
+        color: #AA73FF;
+    }
+
+    .OD {
+        color: #2196F3;
+    }
+
+    .H {
+        color: #00BCD4;
+    }
+
+    .PR {
+        color: #fd7e14;
+    }
+
+    .POD {
+        color: #9c27b0;
+    }
+
+    .PL {
+        color: #d3e605;
+    }
+
+        th.days > div {
+            transform: rotate(-90deg);
+            transform-origin: center center;
+            width: 40px;
+            margin: auto;
+            text-align:center;
+            margin-bottom:10px;
+           
+        }
+
+        .companybody td{
+            font-weight:bold;
+        }
+
+    /*   table td, .table th {
+            white-space: nowrap;
+            min-width: 150px;
+            overflow-x:audio;
+        } */
+</style>
+<div class=" container-fluid" id="bdy">
+    <div class="card shadow mt-4" style="">
+        <div class="card-header py-3">
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">Attendance Muster</h6>
+        </div>
+        <div class="card-body">
+           @*  <h4 class="text-center mb-2">GroupL Internal - Helpful People (North)</h4> *@
+            <div class="row">
+        
+                <input type="hidden" id="txtHiddenId" value="0" />
+                <input type="hidden" id="flgmode" value="ADD" />
+                <input type="hidden" id="UserId" value="@ViewBag" />
+                <input type="hidden" id="txtpagename" value="Attendance Muster" />
+                <div class="col-md-4">
+
+                    <div class="form-group">
+                        <label>Year</label>
+                        <select class="form-control" id="Year">
+
+                            @for (int i = DateTime.Now.Year; i >= (DateTime.Now.Year)-2; i--)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                         
+                            @* <option value="2025">2025</option> *@
+                           
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Month</label>
+                        <select class="form-control" id="month">
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+
+                        </select>
+                    </div>
+                </div>
+               
+
+
+                <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-primary" onclick="SearchData()">View</button>
+                    <button class="btn btn-primary" onclick="exportExcel()">Export To Excel</button>
+                    @* <button class="btn btn-primary" id="Genratepdf">Export To PDF</button> *@
+                </div>
+              
+
+                <style>
+                    .attendance-legend {
+                        font-family: system-ui, sans-serif;
+                        padding: 10px 15px;
+                        /* background: #f8f9fa; */
+                        border-radius: 10px;
+                        /* box-shadow: 0 1px 3px rgba(0,0,0,0.1); */
+                      
+                      
+
+                    }
+
+                        .attendance-legend h6 {
+                            margin-bottom: 8px;
+                            font-weight: 600;
+                            color: #333;
+                        }
+
+                    .legend-items {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                    }
+
+                    .legend {
+                        background: #fff;
+                        border: 1px solid #ddd;
+                        border-radius: 6px;
+                        padding: 4px 8px;
+                        font-size: 14px;
+                        /* color: #444; */
+                    }
+
+                        /* .legend strong {
+                            color: #007bff;
+                        } */
+                </style>
+
+                <span class="table-responsive mt-2">
+                    <div class="attendance-legend ">
+                        @* <h6>Attendance Legend</h6> *@
+                        <div class="legend-items">
+                            <span class="legend P"><strong>P</strong> – Present</span>
+                            <span class="legend A"><strong>A</strong> – Absent</span>
+                            <span class="legend L"><strong>L</strong> – Leave</span>
+                            <span class="legend HD"><strong>HD</strong> – Half Day</span>
+                            <span class="legend R"><strong>R</strong> – Regularization</span>
+                            <span class="legend H"><strong>H</strong> – Holiday</span>
+                            <span class="legend OD"><strong>OD</strong> – Out Duty</span>
+                            <span class="legend PR"><strong>PR</strong> – Pending Regularization</span>
+                            <span class="legend POD"><strong>POD</strong> – Pending Out Duty</span>
+                            <span class="legend PL"><strong>PL</strong> – Pending Leave</span>
+                        </div>
+                    </div>
+                    <span class="table table-bordered d-none" id="prindDiv" style="overflow-x:auto;" width="100%" cellspacing="0">
+
+                        <table id="attendance">
+                            <thead id="Headertb">
+                                <tr>
+                                    <th colspan="5"></th>
+                                  
+                                    <th class="days"><div>Sunday</div></th>
+                                    <th class="days"><div>Monday</div></th>
+                                    <th class="days"><div>Tuesday</div></th>
+                                    <th class="days"><div>Wednesday</div></th>
+                                    <th class="days"><div>Thrusday</div></th>
+                                    <th class="days"><div>Friday</div></th>
+                                    <th class="days"><div>Saturday</div></th>
+                                    <th class="days"><div>08 August 2025</div></th>
+                                    <th class="days"><div>09 August 2025</div></th>
+                                    <th class="days"><div>10 August 2025</div></th>
+                                    <!-- Add till 31 -->
+                                </tr>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Emp Code</th>
+                                    <th>Name</th>
+                                   @*  <th>Designation</th>
+                                    <th>Department</th>
+                                    <th>Location</th> *@
+                                    <th class="days"><div>01 August 2025</div></th>
+                                    <th class="days"><div>02 August 2025</div></th>
+                                    <th class="days"><div>03 August 2025</div></th>
+                                    <th class="days"><div>04 August 2025</div></th>
+                                    <th class="days"><div>05 August 2025</div></th>
+                                    <th class="days"><div>06 August 2025</div></th>
+                                    <th class="days"><div>07 August 2025</div></th>
+                                    <th class="days"><div>08 August 2025</div></th>
+                                    <th class="days"><div>09 August 2025</div></th>
+                                    <th class="days"><div>10 August 2025</div></th>
+                                    <th class="days"><div>11 August 2025</div></th>
+                                    <th class="days"><div>12 August 2025</div></th>
+                                    <th class="days"><div>13 August 2025</div></th>
+                                    <th class="days"><div>14 August 2025</div></th>
+                                    <th class="days"><div>15 August 2025</div></th>
+                                    <th class="days"><div>16 August 2025</div></th>
+                                    <th class="days"><div>17 August 2025</div></th>
+                                    <th class="days"><div>18 August 2025</div></th>
+                                    <th class="days"><div>19 August 2025</div></th>
+                                    <th class="days"><div>20 August 2025</div></th>
+                                    <!-- Add till 31 -->
+                                </tr>
+                            </thead>
+                            <tbody class="companybody">
+                                <tr>
+                                    <td>GL129</td>
+                                    <td>Joginder Rathore</td>
+                                    <td>Sr. Executive</td>
+                                    <td>STAR 4</td>
+                                    <td>DELHI</td>
+                                    <td class="present">P</td>
+                                    <td class="holiday">H</td>
+                                    <td class="weekend">0</td>
+                                    <td class="present">P</td>
+                                    <td class="present">P</td>
+                                    <td class="absent">A</td>
+                                    <td class="leave">L</td>
+                                    <td class="present">P</td>
+                                    <td class="present">P</td>
+                                    <td class="present">P</td>
+                                </tr>
+                                <tr>
+                                    <td>GL181</td>
+                                    <td>Sakshi Kashyap</td>
+                                    <td>Telecaller</td>
+                                    <td>STAR 4</td>
+                                    <td>GURUGRAM</td>
+                                    <td class="present">P</td>
+                                    <td class="holiday">H</td>
+                                    <td class="weekend">0</td>
+                                    <td class="leave">L</td>
+                                    <td class="present">P</td>
+                                    <td class="present">P</td>
+                                    <td class="absent">A</td>
+                                    <td class="present">P</td>
+                                    <td class="present">P</td>
+                                    <td class="present">P</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script src="~/js/reports/GetAttendanceMuster.js" asp-append-version="true"></script>
+@* <script src="~/grouplreportingportal/js/reports/VisitReport.js"></script> *@
+    <script src="~/js/Master.js"></script>
+    <script src="~/js/InsAjax.js"></script>
+    <script src="~/js/xlxs.full.min.js"></script>
+
+
+
+
+
+
+
+
+
+

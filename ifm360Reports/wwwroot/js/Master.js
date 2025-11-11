@@ -46,110 +46,6 @@ function Validation() {
 
 
 
-function EditMaster(var_url, var_data, var_type, var_ct, var_dt, type) {
-    if (var_type == "")
-        var_type = "POST";
-
-    if (var_ct == "")
-        var_ct = "application/json;charset=utf-8";
-
-    if (var_dt == "")
-        var_dt = "json";
-
-    $.ajax({
-        url: var_url,
-        type: var_type,
-        //contentType: false,
-        processData: false,
-        data: var_data,
-        success: function (data) {
-            $("#btnSubmit").html("Update");
-            if (type == 1) {
-                $("#txteventname").val(data.Data[0]["EventName"]);
-                $("#dtdate").val(data.Data[0]["EventDate"]);
-            }
-            if (type == 2) {
-                $("#txtcategoryname").val(data.Data[0]["CategoryName"]);
-            }
-            if (type == 3) {
-                $("#ddlcategory").val(data.Data[0]["CategoryId"]);
-                $("#txtsubcategory").val(data.Data[0]["SubCategoryName"]);
-            }
-            if (type == 4) {
-                $("#txtitemcode").val(data.Data[0]["ItemCode"]);
-                $("#ddlcategory").val(data.Data[0]["CategoryId"]);
-                BindSubCategory();
-                $("#ddlsubcategory").val(data.Data[0]["SubCategoryId"]);
-                $("#txtitemname").val(data.Data[0]["ItemName"]);
-                $("#txtaliascode").val(data.Data[0]["ItemAliasCode"]);
-                $("#ddlhsncode").val(data.Data[0]["ItemHsnCode"]);
-                $("#txtitemrate").val(data.Data[0]["ItemRate"]);
-                $("#txtdescription").val(data.Data[0]["ItemDescription"]);
-            }
-            if (type == 5) {
-                $("#txttaxname").val(data.Data[0]["TaxName"]);
-                $("#txtpercentage").val(data.Data[0]["TaxPercentage"]);
-            }
-            if (type == 6) {
-                $("#txthsnname").val(data.Data[0]["HsnName"]);
-                $("#txthsncode").val(data.Data[0]["HsnCode"]);
-            }
-            if (type == 7) {
-                $("#txtcounter").val(data.Data[0]["CounterName"]);
-            }
-        },
-        error: function (err) {
-            alert(err.statusText);
-        }
-    });
-}
-
-function filltextbox(var_url, var_data, var_type, var_ct, var_dt, encrp, divid, type) {
-
-    if (var_type == "")
-        var_type = "POST";
-
-    if (var_ct == "")
-        var_ct = "application/json;charset=utf-8";
-
-    if (var_dt == "")
-        var_dt = "json";
-    var i = "";
-    $.ajax({
-        url: var_url,
-        data: { jsonData: var_data, UrlEncript: encrp },
-        type: var_type,
-        //contentType: var_ct,
-        dataType: var_dt,
-        success: function (data) {
-            console.log(data);
-           
-
-          
-
-
-           
-
-
-          
-
-
-           
-            
-
-        },
-        error: function (data) {
-            var data = {
-                status: "Error",
-                msg: "Error on server.",
-                data: [],
-            }
-
-        },
-    });
-}
-
-
 
 function CommonAjax(var_url, var_data, var_type, var_ct, var_dt, encrp, divid) {
 
@@ -563,8 +459,13 @@ function Common(var_url, var_data, var_type, var_ct, var_dt, type) {
         //contentType: var_ct,
         dataType: var_dt,
         success: function (data) {
-            //console.log(data);
-            CalculateTaxAmount(data, type);
+            var data = JSON.parse(data);
+            alert(data[0].Message);
+            if (data[0].Status == "Success") {
+                Cleardata();
+            }
+          
+            
         },
         error: function (data) {
             var data = {
@@ -608,85 +509,6 @@ function BindDropdown(var_url, var_data, var_type, var_ct, var_dt, var_id) {
     });
 }
 
-function saveWithFile(var_url, var_data, var_type, var_ct, var_dt) {
-    if (var_type == "")
-        var_type = "POST";
-
-    if (var_ct == "")
-        var_ct = "application/json;charset=utf-8";
-
-    if (var_dt == "")
-        var_dt = "json";
-
-    $.ajax({
-        url: var_url,
-        type: var_type,
-        contentType: false,
-        processData: false,
-        data: var_data,
-        success: function (data) {
-            console.log(data);
-            if (data.Message != "") {
-                swal("Message", data.Message, data.Message == "Success" ? "success" : "error");
-            }
-            if (data.Message == "Success") {
-                clear();
-            }
-            if (data.Data != undefined) {
-                CreateTableFromArray(data.Data, "Printdiv");
-                dtable();
-            }
-        },
-        error: function (err) {
-            alert(err.statusText);
-        }
-    });
-}
-
-function BindTextbox(var_url, var_data, var_type, var_ct, var_dt, var_id) {
-    if (var_type == "")
-        var_type = "POST";
-
-    if (var_ct == "")
-        var_ct = "application/json;charset=utf-8";
-
-    if (var_dt == "")
-        var_dt = "json";
-
-
-    $.ajax({
-        url: var_url,
-        data: var_data,
-        type: var_type,
-        //contentType: var_ct,
-        dataType: var_dt,
-        success: function (data) {
-            if (var_id != "") {
-                console.log(data);
-                var data1 = JSON.parse(data)
-                $(var_id).val(data1[0].SupplierID);
-            }
-            else {
-                var data1 = JSON.parse(data)
-                //console.log(data1[0].Challan_Number);
-                $("#txtnoofitem").val(data1[0].NofFItem);
-                $("#txtamount").val(data1[0].Amount);
-                $("#ddlsupplier").val(data1[0].Supplierid);
-            }
-
-
-
-        },
-        error: function (data) {
-            var data = {
-                status: "Error",
-                msg: "Error on server.",
-                data: [],
-            }
-
-        },
-    });
-}
 
 function CreateTableFromArray(arrItems, divid) {
     let col = [];
@@ -762,49 +584,7 @@ function CreateTableFromArray(arrItems, divid) {
 
 }
 
-function getFileUrl(fileId, folder) {
-    var currentdate = new Date();
-    var currdate = currentdate.getDate() + "" + currentdate.getMonth() + "" + currentdate.getFullYear() + "" + currentdate.getHours() + "" + currentdate.getMinutes() + "" + currentdate.getSeconds() + "" + currentdate.getMilliseconds();
-    var filename = $(fileId).val();
-    var name = filename.substr(0, filename.lastIndexOf('.'));
-    var dataimg = name.split("\\");
-    var extension = filename.replace(/^.*\./, '');
-    var url_add = window.location.href;
-    var data = url_add.split("://")
-    var protocol = data[0];
-    data = data[1].split("/");
-    var domain = data[0];
-    //var urlimd = protocol + "://" + domain + "/" + folder + "/" + dataimg[2] + currdate + "." + extension;
-    var urlimd = dataimg[2] + currdate + "." + extension;
-    //console.log(urlimd);
-    return { url: urlimd, fname: dataimg[2] + currdate + "." + extension };
-}
 
-
-
-function getfile() {
-    url_add = window.location.href;
-    var data = url_add.split("://");
-    data = data[1].split("/");
-    var menuname = data[1] + "/" + data[2];
-    var url_add = window.location.protocol + "//" + window.location.host + "/";
-    var url = url_add + 'api/ApiServices/SaveTransactions';
-    var Hid_Con = $("#cid").val() + "##" + $("#UserId").val() + "##" + menuname + "##" + $("#flgmode").val();
-    //if ($("#txtsonumber").val() == "") {
-    //	alert("Enter SO Number !!");
-    //	$("#ddlitem").val(0);
-    //}
-    //else {
-    var Data = {
-
-        trntype: $("#trntype").val(),
-        trnid: $("#trnid").val(),
-        type: 121
-    }
-
-    CommonAjaxBom(url, JSON.stringify(Data), "", "", "", "", "PrintdivModal");
-    //}
-}
 
 $('#filterInput').on('keyup', function () {
     let filter = $(this).val().toUpperCase();

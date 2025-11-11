@@ -96,13 +96,11 @@
 
                 <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
 
-                <div class="col-lg-12">
-                    @* <button class="btn btn-primary" onclick="SearchData()">View Shortage</button> *@
-                    @*     <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
-                    <button class="btn btn-primary" id="pdfid">Export To PDF</button> *@
+                <div class="col-lg-4">
+                    <input id="filterInput" type="text" style="font-size:large" class="form-control" placeholder="Search Here.." />
 
                 </div>
-                <input id="filterInput" type="text" style="height: 40px;margin-left: 16px;" class="form-control col-3" placeholder="Search Here.." />
+               
                 <div class="table-responsive mt-2">
                     <div class="table table-bordered" id="data-table" width="100%" cellspacing="0">
                         @*    <style>
