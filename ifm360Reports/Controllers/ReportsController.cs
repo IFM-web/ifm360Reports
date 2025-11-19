@@ -1084,7 +1084,7 @@ namespace ifm360Reports.Controllers
             ViewBag.Pramsname = Pramsname;         
 
             ViewBag.ReportName = Id;
-            ViewBag.Type = Id == "Client Details Report" ? "1": Id=="Site Details Report"?"2": Id == "My Task Report" ? "3":Id== "Resignation Details HR"?"4":"";
+            ViewBag.Type = Id == "Resignation Dashboard" ? "1": Id=="Site Details Report"?"2": Id == "My Task Report" ? "3":Id== "Resignation Details HR"?"4":Id== "Resignation Acceptance Report"?"5":"";
             ViewBag.Company = util.PopulateDropDown("Usp_GroupLNewAppDLL 'CompanyLogin',@Id='" + UserId + "'", util.strElect); 
             ViewBag.customer = CustomerDropDown();
             ViewBag.Shift = util.PopulateDropDown("exec udp_GetStandardShifts @LocationAutoId='" +  branchid+ "'", util.strElect);
@@ -1095,12 +1095,12 @@ namespace ifm360Reports.Controllers
 
      
 
-        public JsonResult GetReport(string Type,string ClientCode,string Site, string fromdate,string ChecklistClient,string ChecklistSite)
+        public JsonResult GetReport(string Type,string ClientCode,string Site, string fromdate,string ChecklistClient,string ChecklistSite,string Status)
        {
             var branchid = HttpContext.Session.GetString("branchid");
             var companyid = HttpContext.Session.GetString("companyid");
             var region = HttpContext.Session.GetString("locationid");
-            string query = @$"Usp_GetGroupLReports @Type='{Type}',@UserId='{UserId}',@CompanyCode='{companyid}',@LocationAutoId='{branchid}',@Region='{region}',@CleintCode='{ClientCode}',@Site='{Site}',@FDate='{fromdate}',
+            string query = @$"Usp_GetGroupLReports @Type='{Type}',@UserId='{UserId}',@CompanyCode='{companyid}',@LocationAutoId='{branchid}',@Region='{region}',@CleintCode='{ClientCode}',@Site='{Site}',@FDate='{fromdate}',@Status='{Status}',
 @id1='{ChecklistClient}',@id2='{ChecklistSite}'
 ";
             DataSet ds = util.Fill(query, util.strElect);
@@ -1116,6 +1116,24 @@ namespace ifm360Reports.Controllers
             string query = $"udp_GetSiteListGroupLNew  @ClientCode='{Id}' ,@BaseCompanyCode='{companyid}',@LocationAutoId='{branchid}'";
             DataSet ds = util.Fill(query, util.strElect);
             return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+        }
+
+        public JsonResult ResignationAccptreject(string type,string Id)
+
+        {
+            string query;
+            if (type.Trim().ToLower() == "accept")
+            {
+                 query = $"udp_AcceptResignationHR  @Id='{Id}' ";
+            }
+            else
+            {
+                 query = $"udp_RejectResignationHR  @Id='{Id}'";
+            }
+            
+            DataSet ds = util.Fill(query, util.strElect);
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+
         }
 
     }

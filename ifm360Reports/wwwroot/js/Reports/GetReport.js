@@ -9,19 +9,31 @@ $(document).ready(() => {
     let Fdatediv = $("#Fdatediv");
     let ChecklistClientDiv = $("#ChecklistClientDiv");
     let ChecklistSiteDiv = $("#ChecklistSiteDiv");
+    let StatusDiv = $("#StatusDiv");
+    let btnsearch = $("#btnsearchtext");
         let type = $("#Type").val();
 
-        console.log(type);
-        console.log(ClientDiv);
+   
 
-    if (type === "3" ) {
+    if (type === "3") {
+       
         ChecklistClientDiv.show();
         }
         else {
         ChecklistClientDiv.hide();
     }
+   
+
+    if (type === "1") {
+       
+        StatusDiv.show();
+        }
+        else {
+        StatusDiv.hide();
+    }
     if (type == "3") {
 
+       
         ChecklistSiteDiv.show()
         Fdatediv.show();
     }
@@ -30,6 +42,10 @@ $(document).ready(() => {
         ChecklistSiteDiv.hide();
         Fdatediv.hide();
     }
+    if (type === "4") {
+        btnsearch.text("Click to view details");
+    }
+    
 
     getClientListSite();
 
@@ -163,7 +179,7 @@ const GetReport = () => {
         type: 'Get',
         data: {
             Type: $("#Type").val(), ClientCode: $("#Client").val(), Site: $("#Site").val(), fromdate: $("#fromdate").val()
-            , ChecklistClient: $("#ChecklistClient").val(), ChecklistSite: $("#ChecklistSite").val()
+            , ChecklistClient: $("#ChecklistClient").val(), ChecklistSite: $("#ChecklistSite").val(), Status: $("#Status").val()
         },
         success: function (data) {
             var data = JSON.parse(data);
@@ -184,17 +200,68 @@ const GetReport = () => {
     })
 } 
 
+
+const ResignationAccptreject = (Type,Id) => {
+    $.ajax({
+
+        url: myurl + '/Reports/ResignationAccptreject',
+        type: 'Get',
+        data: {
+            type: Type,Id:Id
+        },
+        success: function (data) {
+            var data = JSON.parse(data);
+            console.log(data)
+            alert(data[0].MessageString);
+            if (data.length > 0) {
+
+                GetReport();
+            }
+          
+
+
+        },
+        error: function (error) {
+            alert(error.massage);
+        }
+    })
+} 
+
 function exportexcel(type, fn, dl) {
     var ddd = $("#header").text();
     var elt = document.getElementById('data-table');
-    filename = ddd;
-
-    var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+    var filename = ddd;
 
 
+    var tableClone = elt.cloneNode(true);
+
+   
+    var headers = tableClone.querySelectorAll("tr th");
+
+
+    for (var i = headers.length - 1; i >= 0; i--) {
+        var headerText = headers[i].innerText.trim();
+
+     
+        if (headerText === "Action" || headerText.startsWith("Hid_")) {
+           
+            tableClone.querySelectorAll("tr").forEach(function (row) {
+                if (row.cells[i]) {
+                    row.deleteCell(i);
+                }
+            });
+        }
+    }
+
+    var wb = XLSX.utils.table_to_book(tableClone, { sheet: "sheet1" });
+
+  
     return dl ?
         XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
         XLSX.writeFile(wb, fn || (filename + '.' + (type || 'xlsx')));
 }
+
+
+
 
 

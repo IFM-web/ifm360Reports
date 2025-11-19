@@ -132,7 +132,7 @@ namespace ifm360Reports.Controllers
         }
         public JsonResult showMenuRight(string parentMenu, string user)
         {
-            string query = "exec Usp_GroupLNewAppDLL 'MenuRight',@ParentMenuName='" + parentMenu + "',@Id='"+ user + "'";
+            string query = "exec Usp_GroupLNewAppDLL 'MenuRight',@ParentMenuName='" + parentMenu + "',@Id='" + user + "'";
             DataSet ds = db.Fill(query, db.strElect);
             return Json(JsonConvert.SerializeObject(ds.Tables[0]));
         }
