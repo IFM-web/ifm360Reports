@@ -513,3 +513,12 @@ label {
     font-weight: 600;
     color: #555;
 }
+
+table th {
+    border: solid 1px #DDD !important;
+    border-collapse: collapse !important;
+    font-weight: bold !important;
+    padding: 2px 3px !important;
+    text-align: center !important;
+   
+}

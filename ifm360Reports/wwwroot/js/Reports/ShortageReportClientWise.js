@@ -1,5 +1,44 @@
 ﻿$(document).ready(function () {
     document.getElementById('txtdate').value = new Date().toISOString().substring(0, 10);
+    $(document).ready(function () {
+
+        function formatOption(option) {
+            if (!option.id) return option.text;
+
+         
+            var checkbox = $('<div class="checkbox-item"><input type="checkbox"/> ' + option.text + '</div>');
+
+           
+            if ($(option.element).is(':selected')) {
+                checkbox.find("input").prop("checked", true);
+            }
+
+            return checkbox;
+        }
+
+        $("#customSelect").select2({
+            templateResult: formatOption,
+            templateSelection: function (option) { return option.text; },
+            closeOnSelect: false,       
+            allowClear: false
+        });
+
+      
+        $("#customSelect").on("select2:select select2:unselect", function (e) {
+            let selectedId = e.params.data.id;
+
+         
+            $(".select2-results__option").each(function () {
+                let checkbox = $(this).find("input");
+                if ($(this).attr("id") === "select2-customSelect-result-" + selectedId) {
+                    checkbox.prop("checked", e.type === "select2:select");
+                }
+            });
+        });
+
+    });
+
+
     var company = $("#Regionid").val();
     if (company !== "") {
         $("#Regionid").trigger('change');
@@ -20,7 +59,7 @@ function SearchData() {
         data: {
             date: $("#txtdate").val(),
             Regionid: $("#Regionid").val(),
-            clientid: $("#Clientid").val(),
+            clientid: $("#customSelect").val().join(","),
             shiftid: $("#Shiftid").val(),
         },
         success: function (data) {

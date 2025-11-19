@@ -34,11 +34,11 @@ function SearchData() {
         success: function (data) {
             console.log(data);
             $(".preloader").show();
-            if (data != '[]') {
+            if (data.statusCode==200) {
 
 
                 $(".companybody").empty();
-                var data = JSON.parse(data);
+                var data = JSON.parse(data.data);
                 
 
 

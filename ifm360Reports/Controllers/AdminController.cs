@@ -2,7 +2,11 @@
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using ifm360Reports.AuthFilter;
+using ifm360Reports.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.CodeAnalysis.Operations;
 using Newtonsoft.Json;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,7 +17,21 @@ namespace ifm360Reports.Controllers
     [AuthenticationFilter]
     public class AdminController : Controller
     {
+
+        ResponseMessage _Response = new ResponseMessage();
+
         db_Utility db = new db_Utility();
+        private readonly string CompanyId;
+        private readonly string locationid;
+        private readonly string branchid;
+        private readonly string UserId;
+        public AdminController(IHttpContextAccessor context)
+        {
+            CompanyId = context.HttpContext.Session.GetString("companyid");
+            locationid = context.HttpContext.Session.GetString("locationid");
+            branchid = context.HttpContext.Session.GetString("branchid");
+            UserId = context.HttpContext.Session.GetString("UserName");
+        }
         public IActionResult UserMapToBranch()
         {
             ViewBag.Company = db.PopulateDropDown("exec Usp_GroupLNewAppDLL 'Company'", db.strElect);
@@ -97,6 +115,15 @@ namespace ifm360Reports.Controllers
 
         }
         [HttpGet]
+        public JsonResult GetTour(string Id)
+        {
+
+            var ds = db.Fill($"exec  Udp_GetClientTourGroupL @ClientCode=N'{Id}'", db.strElect);
+
+            return Json(JsonConvert.SerializeObject(ds.Tables[0]));
+
+        }
+        [HttpGet]
         public JsonResult UserBranchList(string UserId,string Company,string Region)
         {
 
@@ -132,7 +159,7 @@ namespace ifm360Reports.Controllers
         }
         public JsonResult showMenuRight(string parentMenu, string user)
         {
-            string query = "exec Usp_GroupLNewAppDLL 'MenuRight',@ParentMenuName='" + parentMenu + "',@Id='"+ user + "'";
+            string query = "exec Usp_GroupLNewAppDLL 'MenuRight',@ParentMenuName='" + parentMenu + "',@Id='" + user + "'";
             DataSet ds = db.Fill(query, db.strElect);
             return Json(JsonConvert.SerializeObject(ds.Tables[0]));
         }
@@ -160,6 +187,58 @@ namespace ifm360Reports.Controllers
                 return Json(JsonConvert.SerializeObject(result));
             }
         }
+
+        public IActionResult StatusManage(string Id)
+        {
+           
+            var companyid = HttpContext.Session.GetString("companyid");
+            ViewBag.Customer= db.PopulateDropDown("exec Usp_GroupLNewAppDLL 'CustomerMap',@Id2='" + companyid + "', @Id = '" + HttpContext.Session.GetString("UserName") + "'", db.strElect);
+
+            ViewBag.Region = db.PopulateDropDown("exec  udp_GetReportPortalRegion  @CompanyCode='" + companyid + "'", db.strElect);
+
+            string type= "";
+            if (Id == "Site")
+            {
+                type = "Site Active and Inactive";
+            }
+          if( Id == "Employee")
+            {
+                type = "Employee Active and Inactive";
+            }
+          ViewBag.Type = type;
+            ViewBag.Id = Id;
+            return View();
+        }
+
+        public ResponseMessage snowStatusDetails(string Type,string CleintCode,string BranchId,string isactive)
+        {
+            DataSet ds = new DataSet();
+            ds = db.Fill(@$"exec Usp_GroupLNewApp_EmpandSiteActiveInavtive @Action='{Type}',@CompanyCode='{CompanyId}',@CleintCode='{CleintCode}',@BranchId='{BranchId}',@status='{isactive}'",db.strElect);
+            if(ds.Tables.Count>0)
+            {
+                _Response.StatusCode = System.Net.HttpStatusCode.OK;
+                _Response.Message = "Success";
+                _Response.Data = JsonConvert.SerializeObject(ds.Tables[0]);
+            }
+            else
+            {
+                _Response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                _Response.Message = "No Data Found";
+                _Response.Data = null;
+            }
+            return _Response;
+
+        }
+
+        public JsonResult saveManageStatus(string Clientcode,string type,string BranchId)
+        {
+            var data = Request.Form["data"];
+            var dt = BulkInsert.BulkSave( data,  Clientcode,BranchId , type,db.strElect);
+            return Json(JsonConvert.SerializeObject(dt));
+        }
+      
+
+
 
     }
   

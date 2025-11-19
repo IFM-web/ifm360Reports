@@ -291,8 +291,6 @@ function loadGridData()
     var RegionId = $("#RegionId").val();
     var branchid = $("#branchid").val();
  
-
-
     $.ajax({
         url: myurl + '/IFMReport/getUnifromAccetance',
         type: 'GET',
@@ -304,9 +302,9 @@ function loadGridData()
         success: function (data) {
             $(".preloader").hide();
             $('#data-table tbody').empty();
-            if (data && data.length > 0) {
+            if (data.statusCode == 200) {
                 var sno = 1;
-                var Data = JSON.parse(data);
+                var Data = JSON.parse(data.data);
                 console.log(Data)
                 for (var i = 0; i < Data.length; i++) {
                     var row = '<tr>';
@@ -325,7 +323,7 @@ function loadGridData()
                 }
             } else {
                 $(".preloader").hide();
-                $('#data-table tbody').append('<tr><td colspan="7" class="text-center">No data available.</td></tr>');
+              
             }
         },
         error: function (xhr, status, error) {

@@ -5,636 +5,649 @@
 
 <html>
 <head>
-	<meta name="viewport" content="width=device-width" />
-	<title>@ViewBag.Title</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="icon" type="image/x-icon" href="~/ifm.ico">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
-	<!-- Our Custom CSS -->
-	<link rel="stylesheet" href="~/css/Styleee.css" />
-
-	<!-- Font Awesome JS -->
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
-
-	<script src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-	<script src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
-
-	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-	
-
-
-	<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
-
-	<style>
-		/* Toggle Styles */
-		.navbar-light .navbar-nav .nav-link {
-			width: 85px;
-		}
-		.nav-pills > li > a {
-			border-radius: 0;
-		}
-
-		.form-group input[type=checkbox], .form-group input[type=radio] {
-			box-sizing: border-box;
-			padding: 0;
-			width: auto;
-		}
-
-		table.dataTable tr.even td.sorting_1, table.dataTable tr.odd td.sorting_1 {
-			background-color: #ffffff00 !important;
-		}
-
-		.valname {
-			margin-top: -51px;
-			/* margin-bottom: 1rem; */
-			padding-top: 51px;
-			position: absolute;
-			float: left;
-		}
-
-		.h5, h5 {
-			font-size: 1.25rem;
-			height: 30px;
-			padding: 5px;
-			/*width: 874px;*/
-			text-transform: uppercase;
-			width: 100%;
-			background-color: #6d7fcc;
-			color: white;
-		}
-
-		#wrapper {
-			padding-left: 0;
-			-webkit-transition: all 0.5s ease;
-			-moz-transition: all 0.5s ease;
-			-o-transition: all 0.5s ease;
-			transition: all 0.5s ease;
-			overflow: hidden;
-		}
-
-			#wrapper.toggled {
-				padding-left: 250px;
-				overflow: hidden;
-			}
-
-
-
-				#wrapper.toggled #sidebar-wrapper {
-					width: 250px;
-				}
-
-		#page-content-wrapper {
-			position: absolute;
-			padding: 15px;
-			width: 100%;
-			overflow-x: hidden;
-		}
-
-		.xyz {
-			min-width: 360px;
-		}
-
-		#wrapper.toggled #page-content-wrapper {
-			position: relative;
-			margin-right: 0px;
-		}
-
-		.fixed-brand {
-			width: auto;
-		}
-
-		.fixTableHead {
-			overflow-y: auto;
-			height: 500px;
-		}
-
-			.fixTableHead tr th {
-				position: sticky;
-				top: 0;
-			}
-
-		table {
-			border-collapse: collapse;
-			width: 100%;
-		}
-
-		th,
-		td {
-			/*padding: 8px 15px;*/
-			border: 2px solid black;
-		}
-
-		th {
-			/*background: #ABDD93;*/
-		}
-
-		/* Sidebar Styles */
-
-
-
-
-
-
-		.sidebar-nav li a:active,
-		.sidebar-nav li a:focus {
-			text-decoration: none;
-		}
-
-		ul#menu {
-			padding: 0px;
-			list-style-type: none;
-		}
-
-		.sidebar-nav > .sidebar-brand {
-			height: 65px;
-			font-size: 18px;
-			line-height: 60px;
-		}
-
-			.sidebar-nav > .sidebar-brand a {
-				color: #999999;
-			}
-
-				.sidebar-nav > .sidebar-brand a:hover {
-					color: #fff;
-					background: none;
-				}
-
-		.no-margin {
-			margin: 0;
-		}
-
-		@@media(min-width:768px) {
-			#wrapper {
-				padding-left: 250px;
-			}
-
-			.fixed-brand {
-				width: 250px;
-			}
-
-			#wrapper.toggled {
-				padding-left: 0;
-			}
-
-			#sidebar-wrapper {
-				width: 250px;
-			}
-
-			#wrapper.toggled #sidebar-wrapper {
-				width: 250px;
-			}
-
-			#wrapper.toggled-2 #sidebar-wrapper {
-				width: 50px;
-			}
-
-				#wrapper.toggled-2 #sidebar-wrapper:hover {
-					width: 250px;
-				}
-
-			#page-content-wrapper {
-				padding: 20px;
-				position: relative;
-				-webkit-transition: all 0.5s ease;
-				-moz-transition: all 0.5s ease;
-				-o-transition: all 0.5s ease;
-				transition: all 0.5s ease;
-			}
-
-			#wrapper.toggled #page-content-wrapper {
-				position: relative;
-				margin-right: 0;
-				padding-left: 250px;
-			}
-
-			#wrapper.toggled-2 #page-content-wrapper {
-				position: relative;
-				margin-right: 0;
-				margin-left: -200px;
-				-webkit-transition: all 0.5s ease;
-				-moz-transition: all 0.5s ease;
-				-o-transition: all 0.5s ease;
-				transition: all 0.5s ease;
-				width: auto;
-			}
-		}
-
-		.nav-stacked {
-			padding: 0px;
-		}
-
-			.nav-stacked li ul a {
-				background: #182d87;
-				border-bottom: 1px dotted;
-			}
-
-		#bdy {
-			margin-top: 62px;
-		}
-
-		#data-table thead tr th {
-			background-color: #50859e ;
-			color: #fff;
-		}
-
-			#data-table thead th {
-				border: 1px solid white;
-			}
-
-
-		th {
-			background-color: #c84143;
-			color: #fff;
-		}
-
-		#header {
-			text-transform: uppercase;
-		}
-
-		.ma_width {
-			overflow: scroll;
-		}
-
-		.branchbtn{
-			margin: 5px;
-			border-radius: 16px;
-			background: #c84143 !important;
-			color: white;
-			padding: 5px 16px;
-		}
-		.navbar{
-			padding: 0px !important;
-			background-color: #ffffff !important;
-			border: none !important;
-			border-radius: 0 !important;
-			box-shadow: 1px 1px 3px rgb(0 0 0 / 10%) !important;
-			position: fixed !important;
-			width: 100% !important;
-			z-index: 9999 !important;
-		}
-
-		.list-unstyled  li a {
-			text-decoration:none !important;
-		}
-
-		#data-table th {
-			background-color: #c84143 !important;
-			color: #fff;
-		}
-
-		.dropdown .user-info {
-			padding: 12px 16px;
-			border-bottom: 1px solid #ccc;
-			text-align:left;
-		}
-
-		.dropdown .menu-option {
-			padding: 10px 16px;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			border-top: 1px solid #eee;
-		}
-
-		a.dropdown-item {
-			border-radius: 9px;
-			color: white;
-		}
-
-		/* my style */
-		/* Highlight active submenu */
-		.components a.active-link {
-			color: #fff !important;
-			background-color: #dc3545 !important;
-			border-radius: 4px;
-		}
-
-	
-		/* Optional: highlight the parent when expanded */
-		.components .dropdown-toggle[aria-expanded="true"] {
-			font-weight: bold;
-			color: #007bff;
-		}
-
-
-	</style>
-
-	
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" type="image/x-icon" href="~/ifm.ico">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="~/css/Styleee.css" />
+
+    <!-- Font Awesome JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
+    <script src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+
+
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Toggle Styles */
+        .navbar-light .navbar-nav .nav-link {
+            width: 85px;
+        }
+
+        .nav-pills > li > a {
+            border-radius: 0;
+        }
+
+        .form-group input[type=checkbox], .form-group input[type=radio] {
+            box-sizing: border-box;
+            padding: 0;
+            width: auto;
+        }
+
+        table.dataTable tr.even td.sorting_1, table.dataTable tr.odd td.sorting_1 {
+            background-color: #ffffff00 !important;
+        }
+
+        .valname {
+            margin-top: -51px;
+            /* margin-bottom: 1rem; */
+            padding-top: 51px;
+            position: absolute;
+            float: left;
+        }
+
+        .h5, h5 {
+            font-size: 1.25rem;
+            height: 30px;
+            padding: 5px;
+            /*width: 874px;*/
+            text-transform: uppercase;
+            width: 100%;
+            background-color: #6d7fcc;
+            color: white;
+        }
+
+        #wrapper {
+            padding-left: 0;
+            -webkit-transition: all 0.5s ease;
+            -moz-transition: all 0.5s ease;
+            -o-transition: all 0.5s ease;
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+
+            #wrapper.toggled {
+                padding-left: 250px;
+                overflow: hidden;
+            }
+
+
+
+                #wrapper.toggled #sidebar-wrapper {
+                    width: 250px;
+                }
+
+        #page-content-wrapper {
+            position: absolute;
+            padding: 15px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .xyz {
+            min-width: 360px;
+        }
+
+        #wrapper.toggled #page-content-wrapper {
+            position: relative;
+            margin-right: 0px;
+        }
+
+        .fixed-brand {
+            width: auto;
+        }
+
+        .fixTableHead {
+            overflow-y: auto;
+            height: 500px;
+        }
+
+            .fixTableHead tr th {
+                position: sticky;
+                top: 0;
+            }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            /*padding: 8px 15px;*/
+            border: 2px solid black;
+        }
+
+        th {
+            /*background: #ABDD93;*/
+        }
+
+        /* Sidebar Styles */
+
+
+
+
+
+
+        .sidebar-nav li a:active,
+        .sidebar-nav li a:focus {
+            text-decoration: none;
+        }
+
+        ul#menu {
+            padding: 0px;
+            list-style-type: none;
+        }
+
+        .sidebar-nav > .sidebar-brand {
+            height: 65px;
+            font-size: 18px;
+            line-height: 60px;
+        }
+
+            .sidebar-nav > .sidebar-brand a {
+                color: #999999;
+            }
+
+                .sidebar-nav > .sidebar-brand a:hover {
+                    color: #fff;
+                    background: none;
+                }
+
+        .no-margin {
+            margin: 0;
+        }
+
+        @@media(min-width:768px) {
+            #wrapper {
+                padding-left: 250px;
+            }
+
+            .fixed-brand {
+                width: 250px;
+            }
+
+            #wrapper.toggled {
+                padding-left: 0;
+            }
+
+            #sidebar-wrapper {
+                width: 250px;
+            }
+
+            #wrapper.toggled #sidebar-wrapper {
+                width: 250px;
+            }
+
+            #wrapper.toggled-2 #sidebar-wrapper {
+                width: 50px;
+            }
+
+                #wrapper.toggled-2 #sidebar-wrapper:hover {
+                    width: 250px;
+                }
+
+            #page-content-wrapper {
+                padding: 20px;
+                position: relative;
+                -webkit-transition: all 0.5s ease;
+                -moz-transition: all 0.5s ease;
+                -o-transition: all 0.5s ease;
+                transition: all 0.5s ease;
+            }
+
+            #wrapper.toggled #page-content-wrapper {
+                position: relative;
+                margin-right: 0;
+                padding-left: 250px;
+            }
+
+            #wrapper.toggled-2 #page-content-wrapper {
+                position: relative;
+                margin-right: 0;
+                margin-left: -200px;
+                -webkit-transition: all 0.5s ease;
+                -moz-transition: all 0.5s ease;
+                -o-transition: all 0.5s ease;
+                transition: all 0.5s ease;
+                width: auto;
+            }
+        }
+
+        .nav-stacked {
+            padding: 0px;
+        }
+
+            .nav-stacked li ul a {
+                background: #182d87;
+                border-bottom: 1px dotted;
+            }
+
+        #bdy {
+            margin-top: 62px;
+        }
+
+        #data-table thead tr th {
+            background-color: #50859e;
+            color: #fff;
+        }
+
+        #data-table thead th {
+            border: 1px solid white;
+        }
+
+
+        th {
+            background-color: #c84143;
+            color: #fff;
+        }
+
+        #header {
+            text-transform: uppercase;
+        }
+
+        .ma_width {
+            overflow: scroll;
+        }
+
+        .branchbtn {
+            margin: 5px;
+            border-radius: 16px;
+            background: #c84143 !important;
+            color: white;
+            padding: 5px 16px;
+        }
+
+        .navbar {
+            padding: 0px !important;
+            background-color: #ffffff !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: 1px 1px 3px rgb(0 0 0 / 10%) !important;
+            position: fixed !important;
+            width: 100% !important;
+            z-index: 9999 !important;
+        }
+
+        .list-unstyled li a {
+            text-decoration: none !important;
+        }
+
+        #data-table th {
+            background-color: #c84143 !important;
+            color: #fff;
+        }
+
+        .dropdown .user-info {
+            padding: 12px 16px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .dropdown .menu-option {
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #eee;
+        }
+
+        a.dropdown-item {
+            border-radius: 9px;
+            color: white;
+        }
+
+        /* my style */
+        /* Highlight active submenu */
+        .components a.active-link {
+            color: #fff !important;
+            background-color: #dc3545 !important;
+            border-radius: 4px;
+        }
+
+        .preloaderDiv{
+            width: 90px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            z-index:999999999;
+        }
+
+        /* Optional: highlight the parent when expanded */
+        .components .dropdown-toggle[aria-expanded="true"] {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        table tr td{
+            align-content:center;
+        }
+
+    </style>
+
+
 
 </head>
 <body id="page-top">
-	@{
-		Guid guidno = Guid.NewGuid();
-		var date = DateTime.Now;
-	}
+    @{
+        Guid guidno = Guid.NewGuid();
+        var date = DateTime.Now;
+    }
 
 
-	<div style="display:flex;">
-		<div style="background: #ffffff;">
-			<nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px !important;
-			background-color: #ffffff !important;
-			border: none !important;
-			border-radius: 0 !important;
-			box-shadow: 1px 1px 3px rgb(0 0 0 / 10%) !important;
-			position: fixed !important;
-			width: 100% !important;
-			z-index: 9999 !important;">
-				
-				<div class="container-fluid" @*style="margin-top: -55px;"*@>
-					<input type="hidden" id="UserId" value="@HttpContextAccessor.HttpContext.Session.GetString("Id")" />
-			
-					<input type="hidden" name="SessionId" class=""id="sessionId" value="@(HttpContextAccessor.HttpContext.Session.Id)" />
-				
-					<input type="hidden" name="BranchId" class="" id="cid" value="@HttpContextAccessor.HttpContext.Session.GetString("Branchid")" />
-					<input type="hidden" name="ProfileId" class="" id="pid" value="@HttpContextAccessor.HttpContext.Session.GetString("ProfileId")" />
-				
-					<input type="hidden" name="TranId" class="" id="tranid" value="@(DateTime.Now.ToString("yyyyMMddHHmmssfff"))" />
-				
-					<input type="hidden" name="Guid" class="" id="guid" value="@guidno" />
-					<div class="sidebar-header">
-						<a href="#">
-							<img src="~/GroupL.jfif" style="width: 240px;height: 79px; margin-left: -15px; margin-right:20px; background-color: white;" />
-						</a>
-					</div>
-					<button type="button" id="sidebarCollapse" class="btn btn-info" style="    background: none;
+    <div style="display:flex;">
+        <div style="background: #ffffff;">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 0px !important;
+   background-color: #ffffff !important;
+   border: none !important;
+   border-radius: 0 !important;
+   box-shadow: 1px 1px 3px rgb(0 0 0 / 10%) !important;
+   position: fixed !important;
+   width: 100% !important;
+   z-index: 9999 !important;">
+
+                <div class="container-fluid" @*style="margin-top: -55px;"*@>
+                    <input type="hidden" id="UserId" value="@HttpContextAccessor.HttpContext.Session.GetString("Id")" />
+
+                    <input type="hidden" name="SessionId" class="" id="sessionId" value="@(HttpContextAccessor.HttpContext.Session.Id)" />
+
+                    <input type="hidden" name="BranchId" class="" id="cid" value="@HttpContextAccessor.HttpContext.Session.GetString("Branchid")" />
+                    <input type="hidden" name="ProfileId" class="" id="pid" value="@HttpContextAccessor.HttpContext.Session.GetString("ProfileId")" />
+
+                    <input type="hidden" name="TranId" class="" id="tranid" value="@(DateTime.Now.ToString("yyyyMMddHHmmssfff"))" />
+
+                    <input type="hidden" name="Guid" class="" id="guid" value="@guidno" />
+                    <div class="sidebar-header">
+                        <a href="#">
+                            <img src="~/GroupL.jfif" style="width: 240px;height: 79px; margin-left: -15px; margin-right:20px; background-color: white;" />
+                        </a>
+                    </div>
+                    <button type="button" id="sidebarCollapse" class="btn btn-info" style="    background: none;
     border: none;">
-						<i class="fas fa-align-left"></i>
-					</button>
-					<button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<i class="fas fa-align-justify"></i>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: end;">
-						<ul class="nav navbar-nav m-auto">
-							
-							<li class="nav-item dropdown">
-							
-								<img src="~/GroupL.jfif"
-									 style="width:135px; height: 71px; margin:-10px 0px 0 -227px; border-radius: 100%;position: absolute;" />
-								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><p class="valname">@HttpContextAccessor.HttpContext.Session.GetString("UserName")</p></a>
-								
-								<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="min-width:350px;">
-									@* <a class="dropdown-item" href="@Url.Action("Logout", "Home")">Logout<i class="fas fa-sign-out-alt"></i></a> *@
-									
-									<div class="user-info">
-										
-										<p>Company Name : @HttpContextAccessor.HttpContext.Session.GetString("CompanyName")</p>
-										<p>Region Name : @HttpContextAccessor.HttpContext.Session.GetString("RegionName")</p>
-										<p>Branch Name : @HttpContextAccessor.HttpContext.Session.GetString("BranchName")</p>
-									</div>
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: end;">
+                        <ul class="nav navbar-nav m-auto">
 
-									<div class="menu-option red" >
-										<a class="dropdown-item branchbtn btn-danger" href="@Url.Action("Logout", "Home")">Logout<i class="fas fa-sign-out-alt"></i></a>
-									</div>
-								</div>
-							
-							</li>
-						</ul>
-					</div>
-				</div>
-			</nav>
-			<nav id="sidebar">
-				
-				<div id="Modal1" style="margin-top: 60px;" class="modal fade" tabindex="-1">
-					<div class="modal-dialog">
-						<div class="modal-content" style="width: 895px;margin-left: -138px;">
-							<div class="modal-header">
-								<h4 class="modal-title" id="modelid">DETAILS</h4>
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-							</div>
-							<div class="modal-body" style="margin-top: -14px;">
+                            <li class="nav-item dropdown">
 
-								<div class="table-responsive">
-									<div id="PrintdivModal1" style="margin-top: 10px;">
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" id="btncancel" data-dismiss="modal">Cancel</button>
+                                <img src="~/GroupL.jfif"
+                                     style="width:135px; height: 71px; margin:-10px 0px 0 -227px; border-radius: 100%;position: absolute;" />
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><p class="valname">@HttpContextAccessor.HttpContext.Session.GetString("UserName")</p></a>
 
-								@*<button type="button" data-dismiss="modal" class="btn btn-primary" onclick="checkcheck()">Save</button>*@
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="Modal3" style="margin-top: 60px;" class="modal fade" tabindex="-1">
-					<div class="modal-dialog">
-						<div class="modal-content" style="width: 895px;margin-left: -138px;">
-							<div class="modal-header">
-								<h4 class="modal-title" id="modelid">DETAILS</h4>
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-							</div>
-							<div class="modal-body" style="margin-top: -14px;">
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="min-width:350px;">
+                                    @* <a class="dropdown-item" href="@Url.Action("Logout", "Home")">Logout<i class="fas fa-sign-out-alt"></i></a> *@
 
-								<div class="table-responsive">
-									<div id="PrintdivModal3" style="margin-top: 10px;">
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" id="btncancel" data-dismiss="modal">Cancel</button>
+                                    <div class="user-info">
 
-								@*<button type="button" data-dismiss="modal" class="btn btn-primary" onclick="checkcheck()">Save</button>*@
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="Modal2" style="margin-top: 60px;" class="modal fade" tabindex="-1">
-					<div class="modal-dialog">
-						<div class="modal-content" style="width: 895px;margin-left: -138px;">
-							<div class="modal-header">
-								<h4 class="modal-title" id="modelid">DETAILS</h4>
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-							</div>
-							<div class="modal-body" style="margin-top: -14px;">
+                                        <p>Company Name : @HttpContextAccessor.HttpContext.Session.GetString("CompanyName")</p>
+                                        <p>Region Name : @HttpContextAccessor.HttpContext.Session.GetString("RegionName")</p>
+                                        <p>Branch Name : @HttpContextAccessor.HttpContext.Session.GetString("BranchName")</p>
+                                    </div>
 
-								<div class="table-responsive">
-									<div id="PrintdivModal2" style="margin-top: 10px;">
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" id="btncancel" data-dismiss="modal">Cancel</button>
+                                    <div class="menu-option red">
+                                        <a class="dropdown-item branchbtn btn-danger" href="@Url.Action("Logout", "Home")">Logout<i class="fas fa-sign-out-alt"></i></a>
+                                    </div>
+                                </div>
 
-								@*<button type="button" data-dismiss="modal" class="btn btn-primary" onclick="checkcheck()">Save</button>*@
-							</div>
-						</div>
-					</div>
-				</div>
-			
-				@await Component.InvokeAsync("Menu")
-			
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <nav id="sidebar">
 
+                <div id="Modal1" style="margin-top: 60px;" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="width: 895px;margin-left: -138px;">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modelid">DETAILS</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body" style="margin-top: -14px;">
 
-			</nav>
-		</div>
+                                <div class="table-responsive">
+                                    <div id="PrintdivModal1" style="margin-top: 10px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="btncancel" data-dismiss="modal">Cancel</button>
 
-		@RenderBody()
+                                @*<button type="button" data-dismiss="modal" class="btn btn-primary" onclick="checkcheck()">Save</button>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="Modal3" style="margin-top: 60px;" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="width: 895px;margin-left: -138px;">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modelid">DETAILS</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body" style="margin-top: -14px;">
 
-	</div>
-	<!-- End of Content Wrapper -->
-	@*</div>*@
-	<!-- End of Page Wrapper -->
-	<!-- Scroll to Top Button-->
-	<!-- Popper.JS -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-	<!-- Bootstrap JS -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-	<script type="text/javascript"
-			charset="utf8"
-			src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-	<script src="@Url.Content("~/js/xlxs.full.min.js")"></script>
-	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-	<script type="text/javascript">
-		// $(document).ready(function () {
-		// 	$(document).on('contextmenu', function (e) {
-		// 		e.preventDefault();
-		// 	});
-		// });
+                                <div class="table-responsive">
+                                    <div id="PrintdivModal3" style="margin-top: 10px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="btncancel" data-dismiss="modal">Cancel</button>
 
-		// function toggleDropdown(event) {
-		// 	document.querySelectorAll(".dropdown-items").forEach(link => {
-		// 		console.log(link)
-		// 	  link.style.display = "none";
-		//    });
+                                @*<button type="button" data-dismiss="modal" class="btn btn-primary" onclick="checkcheck()">Save</button>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="Modal2" style="margin-top: 60px;" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="width: 895px;margin-left: -138px;">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modelid">DETAILS</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body" style="margin-top: -14px;">
 
-		// 	const toggle = event.currentTarget; // <a> tag
-		// 	const dropdown = toggle.nextElementSibling; // <ul> element
-		// 	const arrowIcon = toggle.querySelector('.dropdown-arrow'); // <i class="dropdown-arrow">
+                                <div class="table-responsive">
+                                    <div id="PrintdivModal2" style="margin-top: 10px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="btncancel" data-dismiss="modal">Cancel</button>
 
-		// 	// Toggle dropdown visibility
-		// 	if (dropdown.style.display === "block") {
-		// 		dropdown.style.display = "none";
-		// 		toggle.classList.remove("open");
-		// 	} else {
-		// 		dropdown.style.display = "block";
-		// 		toggle.classList.add("open");
-		// 	}
+                                @*<button type="button" data-dismiss="modal" class="btn btn-primary" onclick="checkcheck()">Save</button>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-		// 	// Toggle arrow rotation (handled by CSS)
-		// 	if (arrowIcon) {
-		// 		arrowIcon.classList.toggle("rotate-up");
-		// 	}
-		// }
-
-
-		//    document.addEventListener("DOMContentLoaded", function () {
-		// 	   let currentUrl = window.location.pathname.toLowerCase();
-
-		// 	   document.querySelectorAll(".sidebar-link, .dropdown-item").forEach(link => {
-		// 		   let href = link.getAttribute("href")?.toLowerCase();
-
-		// 		   if (href && currentUrl.includes(href)) {
-		// 			   link.classList.add("active");
-
-
-		// 			   let parentDropdown = link.closest(".dropdown-items");
-		// 			   if (parentDropdown) {
-		// 				   parentDropdown.style.display = "block";
-		// 			   }
-		// 		   }
-		// 	   });
-		//    });
+                @await Component.InvokeAsync("Menu")
 
 
 
-	
-
-		// function initMenu() {
-		// 	$('#menu ul').hide();
-		// 	$('#menu ul').children('.current').parent().show();
-		// 	//$('#menu ul:first').show();
-		// 	$('#menu li a').click(
-		// 		function () {
-		// 			var checkElement = $(this).next();
-		// 			if ((checkElement.is('ul')) && (checkElement.is(':visible'))) {
-		// 				return true;
-		// 			}
-		// 			if ((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
-		// 				$('#menu ul:visible').slideUp('normal');
-		// 				checkElement.slideDown('normal');
-		// 				return true;
-		// 			}
-		// 		}
-		// 	);
-		// }
-		
-	$(document).ready(function () {
-		// Get current page URL (lowercase and trimmed)
-		var currentUrl = window.location.pathname.toLowerCase();
-		//console.log(currentUrl);
-		// Loop through all sidebar menu links
-			$('.components a').each(function () {
-			var linkUrl = $(this).attr('href');
-			
-			if (!linkUrl) return;
-
-			// Clean ~/ or trailing slashes
-			var cleanUrl = linkUrl.replace('~', '').toLowerCase().replace(/\/$/, '');
-			
-			// If current URL contains this link
-			if (currentUrl.indexOf(cleanUrl) !== -1 && cleanUrl.length > 1) {
-				// Add highlight class
-				$(this).addClass('active-link');
-
-				// Expand parent menu if exists
-				var parentCollapse = $(this).closest('.collapse');
-				if (parentCollapse.length) {
-					parentCollapse.addClass('show');
-					parentCollapse.prev('.dropdown-toggle')
-						.attr('aria-expanded', 'true')
-						.removeClass('collapsed');
-				}
-
-				// Stop after first match
-				return false;
-			}
-		});
-
-		// Toggle menu expand/collapse
-			$('.components .dropdown-toggle').on('click', function (e) {
-			var $this = $(this);
-			var $target = $($this.attr('href'));
-
-			// Close all open menus except this one
-			// $('.components .collapse.show').not($target).slideUp(200).removeClass('show')
-			// 	.prev('.dropdown-toggle')
-			// 	.addClass('collapsed')
-			// 	.attr('aria-expanded', 'false');
-
-			// Toggle current one
-			$target.slideToggle(200).toggleClass('show');
-			var expanded = $target.hasClass('show');
-			$this.attr('aria-expanded', expanded).toggleClass('collapsed', !expanded);
-
-			e.preventDefault();
-		});
-
-		// Sidebar toggle
-		$('#sidebarCollapse').on('click', function () {
-			$('#sidebar').toggleClass('active');
-		});
-	});
+            </nav>
+        </div>
 
 
-		
+        <div class="preloaderid">  <img class="preloaderDiv" style="display:none"  src="~/loading-waiting.gif" /></div>
+        @RenderBody()
 
-		// $(document).ready(function () {
-		// 	$('#sidebarCollapse').on('click', function () {
-		// 		$('#sidebar').toggleClass('active');
-		// 	});
-		// });
+    </div>
+    <!-- End of Content Wrapper -->
+    @*</div>*@
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    <script src="@Url.Content("~/js/xlxs.full.min.js")"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+            // $(document).ready(function () {
+            // 	$(document).on('contextmenu', function (e) {
+            // 		e.preventDefault();
+            // 	});
+            // });
 
-		
-		
-	</script>
-	 <script>
-	// 	initMenu();
-	// </script>
+            // function toggleDropdown(event) {
+            // 	document.querySelectorAll(".dropdown-items").forEach(link => {
+            // 		console.log(link)
+            // 	  link.style.display = "none";
+            //    });
+
+            // 	const toggle = event.currentTarget; // <a> tag
+            // 	const dropdown = toggle.nextElementSibling; // <ul> element
+            // 	const arrowIcon = toggle.querySelector('.dropdown-arrow'); // <i class="dropdown-arrow">
+
+            // 	// Toggle dropdown visibility
+            // 	if (dropdown.style.display === "block") {
+            // 		dropdown.style.display = "none";
+            // 		toggle.classList.remove("open");
+            // 	} else {
+            // 		dropdown.style.display = "block";
+            // 		toggle.classList.add("open");
+            // 	}
+
+            // 	// Toggle arrow rotation (handled by CSS)
+            // 	if (arrowIcon) {
+            // 		arrowIcon.classList.toggle("rotate-up");
+            // 	}
+            // }
+
+
+            //    document.addEventListener("DOMContentLoaded", function () {
+            // 	   let currentUrl = window.location.pathname.toLowerCase();
+
+            // 	   document.querySelectorAll(".sidebar-link, .dropdown-item").forEach(link => {
+            // 		   let href = link.getAttribute("href")?.toLowerCase();
+
+            // 		   if (href && currentUrl.includes(href)) {
+            // 			   link.classList.add("active");
+
+
+            // 			   let parentDropdown = link.closest(".dropdown-items");
+            // 			   if (parentDropdown) {
+            // 				   parentDropdown.style.display = "block";
+            // 			   }
+            // 		   }
+            // 	   });
+            //    });
+
+
+
+
+
+            // function initMenu() {
+            // 	$('#menu ul').hide();
+            // 	$('#menu ul').children('.current').parent().show();
+            // 	//$('#menu ul:first').show();
+            // 	$('#menu li a').click(
+            // 		function () {
+            // 			var checkElement = $(this).next();
+            // 			if ((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+            // 				return true;
+            // 			}
+            // 			if ((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+            // 				$('#menu ul:visible').slideUp('normal');
+            // 				checkElement.slideDown('normal');
+            // 				return true;
+            // 			}
+            // 		}
+            // 	);
+            // }
+
+        $(document).ready(function () {
+            // Get current page URL (lowercase and trimmed)
+            var currentUrl = window.location.pathname.toLowerCase();
+      
+            // Loop through all sidebar menu links
+                $('.components a').each(function () {
+                var linkUrl = $(this).attr('href');
+              
+                if (!linkUrl) return;
+
+                // Clean ~/ or trailing slashes
+                var cleanUrl = linkUrl.replace('~', '').toLowerCase().replace(/\/$/, '');
+
+                // If current URL contains this link
+                // if (currentUrl.indexOf(cleanUrl) !== -1 && cleanUrl.length > 1) {
+                 if (currentUrl === cleanUrl) {
+                    $(this).addClass('active-link');
+
+                          console.log(currentUrl);
+                          console.log(cleanUrl);
+
+
+
+                    // Expand parent menu if exists
+                    var parentCollapse = $(this).closest('.collapse');
+                    if (parentCollapse.length) {
+                        parentCollapse.addClass('show');
+                        parentCollapse.prev('.dropdown-toggle')
+                            .attr('aria-expanded', 'true')
+                            .removeClass('collapsed');
+                    }
+
+                    // Stop after first match
+                    return false;
+                }
+            });
+
+            // Toggle menu expand/collapse
+                $('.components .dropdown-toggle').on('click', function (e) {
+                var $this = $(this);
+                var $target = $($this.attr('href'));
+
+            
+                $target.slideToggle(200).toggleClass('show');
+                var expanded = $target.hasClass('show');
+                $this.attr('aria-expanded', expanded).toggleClass('collapsed', !expanded);
+
+                e.preventDefault();
+            });
+
+            // Sidebar toggle
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+
+
+
+
+            // $(document).ready(function () {
+            // 	$('#sidebarCollapse').on('click', function () {
+            // 		$('#sidebar').toggleClass('active');
+            // 	});
+            // });
+
+
+
+    </script>
+    <script>
+        // 	initMenu();
+        // </script>
 </body>
 </html>

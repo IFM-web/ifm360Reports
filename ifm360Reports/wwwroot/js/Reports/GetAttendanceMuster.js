@@ -18,6 +18,7 @@ function SearchData() {
     $(".preloader").show();
     let month = $("#month").val()
     let Year = $("#Year").val();
+    let noOfDays = new Date(Year, month, 0).getDate();
     $.ajax({
 
         url: localStorage.getItem('Myurl') + '/Reports/GetAttendanceMuster',
@@ -30,19 +31,19 @@ function SearchData() {
 
         },
         success: function (data) {
-            var data = JSON.parse(data);
-            console.log(data);
-
             $(".preloader").hide();
-            if (data != '[]') {
+            if (data.statusCode == 200) {
+            var data = JSON.parse(data.data);
+           // console.log(data);
+         
                 $("#prindDiv").removeClass('d-none');
 
                 $(".companybody").empty();
                 $("#Headertb").empty();
 
-                let header1 = `<tr></th><th></th><th></th><th></th>`;
-                let header = `<tr><th>SNo</th><th>EmpCode</th><th>EmpName</th>`;
-                for (let i = 1; i <= 31; i++) {
+                let header1 = `<tr></th><th></th><th></th><th></th><th></th><th></th>`;
+                let header = `<tr><th>SNo</th><th>Customer</th><th>Site</th><th>EmpCode</th><th>EmpName</th>`;
+                for (let i = 1; i <= noOfDays; i++) {
                     let tempmonth;
                     if (month < 10) {
                         tempmonth = month.replace('0', '');
@@ -58,9 +59,9 @@ function SearchData() {
 
 
                 }
-                header += `<th class='days' style="background-color:#1F4E78"><div>Duty Days</div> </th>`
-                $("#Headertb").append(header1 + `<th class='days' style="background-color:#1F4E78"></th>` + '</tr>');
-                $("#Headertb").append(header + '</tr>');
+              //  header += `<th class='days' style="background-color:#1F4E78"></th>`
+               $("#Headertb").append(header1);
+               $("#Headertb").append(header + '</tr>');
 
                 var rowlen = parseInt($('.companybody tr').length);
                 // console.log(data)
@@ -69,23 +70,26 @@ function SearchData() {
 
                 for (var i = 0; i < data.length; i++) {
                     row += `<tr>
-                    <td>${data[i].SNo}</td>
+                     <td>${data[i].SNo}</td>
+                    <td>${data[i].ClientName || ''}</td>
+                    <td>${data[i].AsmtName || ''}</td>
+                   
                   
                   <td>${data[i].EmpCode}</td>
                     <td>${data[i].EmpName}</td>
                     `
                     $(".preloader").hide();
 
-                    for (let j = 1; j <= 31; j++) {
+                    for (let j = 1; j <= noOfDays; j++) {
                         if (j < 10) {
                             j = '0' + j;
                         }
                         let val = data[i][j];
                         row += `<td style="background-color:${val == 'A' ? '#F44336' : val == 'P' ? '#4CAF50' : val == 'L' ? '#FFCDD2' : val == 'HD' ? '#AA73FF' : val
 
-                            == 'R' ? '#FFBE00' : val == 'H' ? '#00BCD4' : val == 'OD' ? '#2196F3' : val == 'POD' ? '#9c27b0' : val == 'PR' ? '#fd7e14' : val == 'PL' ? '#d3e605' : ''}">${val}</td>`;
+                            == 'R' ? '#FFBE00' : val == 'H' ? '#00BCD4' : val == 'OD' ? '#2196F3' : val == 'POD' ? '#9c27b0' : val == 'PR' ? '#fd7e14' : val == 'PL' ? '#d3e605' : ''}">${val == "null" ? "" : val }</td>`;
                     }
-                    row += `  <td>${data[i].DutyDays || 0}</td>`;
+                  //  row += `  <td>${data[i].DutyDays || 0}</td>`;
                     row += "</tr>"
 
 
@@ -169,7 +173,7 @@ async function exportExcel() {
                         fgColor: { argb: "FF006400" }, 
                     };
                 }
-                else if (val === '' || val === "SNo" || val === "EmpCode" || val === "EmpName" || val === "DutyDays") {
+                else if (val === '' || val === "SNo" || val === "EmpCode" || val === "EmpName" || val === "DutyDays" || val=== "Customer" || val=="Site") {
 
                     cell.fill = {
                         type: "pattern",
@@ -189,7 +193,7 @@ async function exportExcel() {
 
                 cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
                 cell.alignment = { horizontal: "center", vertical: "middle" };
-                if (colNumber > 3) cell.alignment.textRotation = 90;
+                if (colNumber > 5) cell.alignment.textRotation = 90;
             } else {
                 const val = cell.value;
                 if (val === "P")

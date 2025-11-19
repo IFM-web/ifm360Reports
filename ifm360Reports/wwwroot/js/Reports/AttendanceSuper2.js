@@ -26,11 +26,11 @@ function SearchData() {
         },
         success: function (data) {
             $(".preloader").hide();
-            if (data != '[]') {
+            if (data.statusCode == 200) {
 
 
                 $(".companybody").empty();
-                var data = JSON.parse(data);
+                var data = JSON.parse(data.data);
 
                 var rowlen = parseInt($('.companybody tr').length);
                 // console.log(data)

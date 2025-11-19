@@ -49,7 +49,7 @@
                 <div class="col-md-4" id="datafiled">
                     <div class="form-group">
                         <label for="fromDate" class="form-label">From Date</label> 
-                        <input type="date" class="form-control" id="txtfromdate" name="Date" onchange="SearchData()" />
+                        <input type="date" class="form-control" id="txtfromdate" name="Date"  />
 
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="col-md-4" id="datafiled">
                     <div class="form-group">
                         <label for="txttoDate" class="form-label">To Date</label>
-                        <input type="date" class="form-control" id="txttoDate" name="Date" onchange="SearchData()" />
+                        <input type="date" class="form-control" id="txttoDate" name="Date"  />
 
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="shift">Select Site</label>
-                        <select class="form-control" id="siteid" onchange="SearchData()">
+                        <select class="form-control" id="siteid">
                             <option value="All">All</option>
                         @if (ViewBag.Shift != null)
                         {
@@ -127,7 +127,7 @@
                 <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
 
                 <div class="col-lg-12">
-                    @* <button class="btn btn-primary" onclick="SearchData()">View Shortage</button> *@
+                    <button class="btn btn-primary" onclick="SearchData()">View Out Of Range</button>
                     <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
                     <button class="btn btn-primary" id="Genratepdf">Export To PDF</button>
 

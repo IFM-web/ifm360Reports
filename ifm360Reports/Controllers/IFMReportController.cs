@@ -1,67 +1,92 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using ifm360Reports.AuthFilter;
+using ifm360Reports.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-
+using System.Net;
 namespace ifm360Reports.Controllers
 {
 	[AuthenticationFilter]
-    public class IFMReportController : Controller
-    {
+	public class IFMReportController : Controller
+	{
 
 		db_Utility util = new db_Utility();
 		ClsUtility utility = new ClsUtility();
+		ResponseMessage response = new ResponseMessage();
 		#region Uniform Accepten Report
 
 		public IActionResult UniformAccpten()
-        {
+		{
 			var companyListJson = HttpContext.Session.GetString("CompanyList");
 			List<SelectListItem> companyList = null;
 			if (!string.IsNullOrEmpty(companyListJson))
 			{
 				companyList = JsonConvert.DeserializeObject<List<SelectListItem>>(companyListJson);
 			}
-			ViewBag.Company = util.PopulateDropDown("Usp_GroupLNewAppDLL 'CompanyLogin',@Id='" + HttpContext.Session.GetString("UserName") + "'", util.strElect); 
+			ViewBag.Company = util.PopulateDropDown("Usp_GroupLNewAppDLL 'CompanyLogin',@Id='" + HttpContext.Session.GetString("UserName") + "'", util.strElect);
 			return View();
-        }
-
-		public JsonResult getUnifromAccetance(string Company,string Region,string Branch)
-		{
-			var ds = util.Fill("exec Udp_EnployeeUniformDetails @company='"+ Company + "',@Region='"+Region+"',@Branch='"+Branch+"'", util.strElect);
-			var dt = ds.Tables[0];
-			
-			return Json(JsonConvert.SerializeObject(dt));
 		}
-		public JsonResult getUnifromDetails(string LocId,string EmpCode)
+
+		public ResponseMessage getUnifromAccetance(string Company, string Region, string Branch)
+		{
+			var ds = util.Fill("exec Udp_EnployeeUniformDetails @company='" + Company + "',@Region='" + Region + "',@Branch='" + Branch + "'", util.strElect);
+			
+			if(ds.Tables.Count>0 && ds.Tables[0].Rows.Count > 0)
+			{
+				response.StatusCode =HttpStatusCode.OK;
+				response.Message = "List";
+				response.Data = JsonConvert.SerializeObject(ds.Tables[0]);
+
+            }
+			else
+			{
+				response.StatusCode = HttpStatusCode.NotFound;
+				response.Message = "Not Found";
+				response.Data = null;
+			}
+
+
+
+				return response;
+		}
+		public JsonResult getUnifromDetails(string LocId, string EmpCode)
 		{
 			var ds = util.Fill("exec Udp_EnployeeUniform_ItemDetails @Emp_Code='" + EmpCode + "'", util.strElect);
 			var dt = ds.Tables[0];
-			
+
 			return Json(JsonConvert.SerializeObject(dt));
 		}
 
-	#endregion
+		#endregion
 
-	public IActionResult ConsolidatedUniform()
-	{
-            var companyListJson = HttpContext.Session.GetString("CompanyList");
-            List<SelectListItem> companyList = null;
-            if (!string.IsNullOrEmpty(companyListJson))
-            {
-                companyList = JsonConvert.DeserializeObject<List<SelectListItem>>(companyListJson);
-            }
-            ViewBag.Company = util.PopulateDropDown("Usp_GroupLNewAppDLL 'CompanyLogin',@Id='" + HttpContext.Session.GetString("UserName") + "'", util.strElect); 
-            return View();
-    }
+		public IActionResult ConsolidatedUniform()
+		{
+			var companyListJson = HttpContext.Session.GetString("CompanyList");
+			List<SelectListItem> companyList = null;
+			if (!string.IsNullOrEmpty(companyListJson))
+			{
+				companyList = JsonConvert.DeserializeObject<List<SelectListItem>>(companyListJson);
+			}
+			ViewBag.Company = util.PopulateDropDown("Usp_GroupLNewAppDLL 'CompanyLogin',@Id='" + HttpContext.Session.GetString("UserName") + "'", util.strElect);
+			return View();
+		}
 
-    public JsonResult getConsolidatedUniform(string Company, string Region, string Branch)
-	{
+		public JsonResult getConsolidatedUniform(string Company, string Region, string Branch)
+		{
 
-        var ds = util.Fill("exec Udp_EmployeeConsolidatedUniform @Company='" + Company + "',@UserId='"+ HttpContext.Session.GetString("UserName") + "',@Region='"+Region+"',@Branch='"+Branch+"'", util.strElect);
-        var dt = ds.Tables[0];
+			var ds = util.Fill("exec Udp_EmployeeConsolidatedUniform @Company='" + Company + "',@UserId='" + HttpContext.Session.GetString("UserName") + "',@Region='" + Region + "',@Branch='" + Branch + "'", util.strElect);
+			var dt = ds.Tables[0];
 
-        return Json(JsonConvert.SerializeObject(dt));
-    }
-    }
+			return Json(JsonConvert.SerializeObject(dt));
+		}
+
+		public IActionResult MyTaskReport()
+		{
+
+			return View();
+
+
+		}
+	}
 }

@@ -11,6 +11,22 @@
         left: 50%;
     }
 
+    .form-group label     
+
+    {
+        font-size: 14px !important;
+        color: #333448;
+        font-weight: 400;
+        position: relative; 
+        left:0;
+        top:0;
+        background: #fff;
+        margin-bottom: 0;
+        padding: 0 5px;
+        z-index: 9999;
+    }
+    
+
 
 
     h2 {
@@ -84,7 +100,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Select Region</label>
-                        <select class="form-control" id="Regionid" ">
+                        <select class="form-control" id="Regionid" >
                             <option value="All">All</option>
                         @if (ViewBag.Region != null)
                         {
@@ -100,8 +116,42 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Select Client</label>
-                        <select class="form-control" id="Clientid">
-                            <option value="All">All</option>
+
+                      @*   <div class="custom-multiselect w-100 position-relative">
+                            <input type="hidden" class="form-control mandatory" id="customSelect" name="Company" placeholder="Select..." readonly>
+                            <input type="text" class="form-control " id="customSelectName" placeholder="Select..." readonly>
+
+                            <div class="custom-multiselect-menu border rounded bg-white position-absolute mt-1 w-100" id="checkboxContainer" style="display: none; max-height: 200px; overflow-y: auto;">
+                                @if (ViewBag.client != null)
+                                {
+                                    foreach (var e in ViewBag.client as List<SelectListItem>)
+                                    {
+                                        <div class="form-check ms-2">
+
+                                            <input style="width:15px" class="form-check-input chkItem" type="checkbox" value="@e.Value" id="chk-@e.Value">
+                                            <label class="form-check-label" id="chk-@e.Value">@e.Text</label>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div> *@
+
+                        <select id="customSelect" name="Salary Head" class="form-control mandatory" multiple="multiple" >
+                            @*  <option value="0">Select</option> *@
+                            @{
+                                if (ViewBag.client != null)
+                                {
+                                    foreach (var e in ViewBag.client as List<SelectListItem>)
+                                    {
+                                        <option value="@e.Value">@e.Text</option>
+                                    }
+                                }
+                            }
+                        </select>
+
+                     @*    <select class="form-control" id="Clientid">
+                     
                         @if (ViewBag.client != null)
                         {
                             foreach (var item in ViewBag.client as List<SelectListItem>)
@@ -109,7 +159,7 @@
                                     <option value="@item.Value">@item.Text</option>
                             }
                         }
-                        </select>
+                        </select> *@
                     </div>
                 </div>
 
@@ -224,12 +274,59 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/[email protected]/dist/css/select2.min.css" rel="stylesheet" />
 
-<script src="~/js/reports/ShortageReportClientWise.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery (if not already included) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://unpkg.com/xlsx-populate/browser/xlsx-populate.min.js"></script>
+<script src="~/js/reports/ShortageReportClientWise.js" asp-append-version="true"></script>
 <script src="~/js/Master.js"></script>
 <script src="~/js/InsAjax.js"></script>
 <script src="~/js/xlxs.full.min.js"></script>
+
+<script>
+
+        const displayBox = document.getElementById('customSelect');
+    const displayBoxName = document.getElementById('customSelectName');
+    const menu = document.getElementById('checkboxContainer');
+    const wrapper = document.querySelector('.custom-multiselect');
+
+    // Open/close toggle
+    displayBoxName.addEventListener('click', function () {
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+
+  
+    document.addEventListener('click', function (event) {
+        if (!wrapper.contains(event.target)) {
+            menu.style.display = 'none';
+        }
+    });
+
+
+    menu.addEventListener('change', function () {
+        const selectedCheckboxes = Array.from(menu.querySelectorAll(".chkItem:checked"));
+
+        // Get values
+        const selectedValues = selectedCheckboxes.map(cb => cb.value);
+        displayBox.value = selectedValues.join(",");
+
+        
+        const selectedTexts = selectedCheckboxes.map(cb => {
+            const label = cb.nextElementSibling;
+            return label ? label.innerText.trim() : "";
+        });
+        displayBoxName.value = selectedTexts.join(",");
+    });
+</script>
 
 
 

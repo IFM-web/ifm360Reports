@@ -1,0 +1,149 @@
+﻿
+
+@{
+    ViewData["Title"] = "MyTask Report";
+    Layout = "~/Views/Shared/_MainLayout1.cshtml";
+}
+
+<style>
+    #detailstable tr td {
+        border: solid 1px #DDD;
+        border-collapse: collapse;
+        
+    }
+</style>
+
+<div class="container-fluid" id="bdy">
+    <div class="card shadow mt-4" style="">
+        <div class="card-header py-3">
+            <h6 id="header" class="m-0 font-weight-bold text-primary ">MyTask Report</h6>
+        </div>
+        <div class="card-body">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document" style="width: fit-content;margin-top: 90px;">
+                    <div class="modal-content" style="margin: 0 auto;">
+                        <div class="modal-header">
+                            <button onclick="rotateImage()" class="btn btn-primary">Rotate</button>
+                            <button type="button" onclick="resetImageRotation()" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img class="modal-content" style="width: 304px;height: 280px;" id="img01">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <input type="hidden" id="txtHiddenId" value="0" />
+                <input type="hidden" id="flgmode" value="ADD" />
+                <input type="hidden" id="Type" value="3" />
+                <input type="hidden" id="txtpagename" value="MyTask Report" />
+
+                                
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label id="labledate">Date</label>
+                        <input type="date" class="form-control form-control-user col" onchange="GetClientbyTask()" id="fromdate">
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div  class="col-md-4" >
+                        <div class="form-group">
+                            <label>Client Name</label>
+                            <select name="" id="Client" class="form-control  mandatory intr col">
+
+                             
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" >
+                        <div class="form-group">
+                            <label>Site Name</label>
+                            <select name="" id="Site" class="form-control  mandatory intr col">
+                                <option value="All">All</option>
+
+                            </select>
+
+                        </div>
+                    </div>
+
+                <div  class="col-md-4" >
+                    <div class="form-group">
+                        <label>CheckList Header </label>
+                        <select name="" id="ChecklistHeader" class="form-control  mandatory intr col">
+                        </select>
+                    </div>
+                </div>
+
+                <div  class="col-md-4" >
+                    <div class="form-group">
+                        <label>Task </label>
+                        <select name="" id="TourId" class="form-control  mandatory intr col">
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="preloaderid">  <img class="preloader" style="display:none;" src="~/loading-waiting.gif" /></div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-primary" id="btnsearchtext" onclick="GetReport()">Search</button>
+                    <button class="btn btn-primary" onclick="exportexcel()">Export To Excel</button>
+                    <button class="btn btn-primary" id="Genratepdf">Export To PDF</button>
+
+                </div>
+                <div id="prindDiv">
+                <div id="dataclient" style="width:100%; margin-bottom:10px; " class="d-none">
+                    <table id="detailstable" class="mt-2"  cellpadding="5" cellspacing="0" width="100%">
+                        <tr>
+                            <th colspan="4" style="text-align: center; font-size: 20px;">MyTask Report</th>
+                        </tr>
+                      
+                            <tr>
+                                <td colspan="2"><strong>Customer Name :</strong> <span id="customername"></span></td>
+                                <td colspan="2" id="sitename1"><strong>Site Name :</strong> <span id="sitename"></span></td>
+                            </tr>
+                        
+
+                        <tr class="mt-4">
+                                <td colspan="4" style="background:#2086be; color:white !important" class="mt-4"><strong>Job Allotment Details :</strong></td>
+
+                        </tr>
+                      
+                            <tr>
+                                <td colspan="2"><strong>Staff Name :</strong> <span id="staffname"></span></td>
+                                <td colspan="2"><strong>Designation :</strong> <span id="designation"></span></td>
+                               
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>CheckList Header :</strong> <span id="HeaderName"></span> </td>
+                                <td colspan="2"><strong>Visit Date :</strong> <span id="visitdate"></span> </td>
+                            </tr>
+                            
+                            
+                        
+
+
+                    </table>
+                </div>
+
+                <div class="col-12 mt-3" id="Printdiv" style="overflow-x:auto;"></div>
+
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/xlxs.full.min.js"></script>
+<script src="~/js/Master.js" asp-append-version="true"></script>
+<script src="~/js/IFMReports/MyTask.js" asp-append-version="true"></script>
+

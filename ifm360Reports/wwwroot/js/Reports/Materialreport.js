@@ -13,8 +13,9 @@ function SearchData() {
         data: { Month: $("#month").val(), Year: $("#Year").val()},
         success: function (data) {
             $(".preloader").hide();
-            var data = JSON.parse(data);
-            if (data.length!=0) {
+           
+            if (data.statusCode ==200) {
+                var data = JSON.parse(data.data);
                 console.log(data);
                 let mappedData = data.map(obj => {
                     return Object.fromEntries(

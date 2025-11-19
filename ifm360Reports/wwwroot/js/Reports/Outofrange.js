@@ -10,7 +10,7 @@
         $("#siteid").trigger('change');
     }
 
-        SearchData();
+    
    
 
    
@@ -34,7 +34,7 @@ function bindbranchtoreg() {
                 dropdown.append($('<option></option>').attr('value', data[i].LocationAutoID).text(data[i].LocationCode));
             }
             bindclienttofbranch();
-            SearchData();
+        
         },
         error: function (error) {
             alert(error.massage);
@@ -84,7 +84,7 @@ function bindsite() {
 
                 dropdown.append($('<option></option>').attr('value', data[i].AsmtId).text(data[i].AsmtName));
             }
-            SearchData();
+          
         
         },
         error: function (error) {
@@ -113,12 +113,12 @@ function SearchData() {
         success: function (data) {
             console.log(data);
             $(".preloader").hide();
-            if (data != '[]') {
+            if (data.statusCode==200) {
 
                 $("#signature").show();
                 $("#dataclient").show();
                 $(".companybody").empty();
-                var data = JSON.parse(data);
+                var data = JSON.parse(data.data);
               
 
                 var rowlen = parseInt($('.companybody tr').length);
@@ -165,8 +165,6 @@ function SearchData() {
 function exportexcel(type, fn, dl) {
     var data = $("#txttodate").val()
     var data1 = $("#txtfromdate").val()
-
-
 
 
     var ddd = $("#txtpagename").val();

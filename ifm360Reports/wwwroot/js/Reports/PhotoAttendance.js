@@ -1,4 +1,4 @@
-/// <reference path="../xlxs.full.min.js" />
+
 $(document).ready(function () {
     document.getElementById('txttodate').value = new Date().toISOString().substring(0, 10);
     document.getElementById('txtfromdate').value = new Date().toISOString().substring(0, 10);
@@ -9,8 +9,7 @@ let myurl = localStorage.getItem('Myurl');
 var contentdata = '';
 function SearchData() {
     $(".preloader").show();
-    
-    
+        
     $.ajax({
        
        url: myurl+'/Reports/GetSearchPhotoAttendance',
@@ -25,11 +24,11 @@ function SearchData() {
         },
         success: function (data) {
             $(".preloader").hide();
-            if (data != '[]') {
+            if (data.statusCode==200) {
 
 
                 $(".companybody").empty();
-                var data = JSON.parse(data);
+                var data = JSON.parse(data.data);
                 console.log(data)
               
                 var rowlen = parseInt($('.companybody tr').length);
@@ -43,7 +42,7 @@ function SearchData() {
 
                 }
 
-                $(".companybody").prepend(row);
+                $(".companybody").append(row);
 
 
 

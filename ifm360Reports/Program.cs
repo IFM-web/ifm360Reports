@@ -1,8 +1,9 @@
+using ifm360Reports.Models;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+DbConnect.ConnectionString = builder.Configuration.GetConnectionString("defaultconnection");
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>

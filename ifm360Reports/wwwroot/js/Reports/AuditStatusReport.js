@@ -38,11 +38,11 @@ function SearchData() {
         },
         success: function (data) {
             $(".preloader").hide();
-            if (data != '[]') {
+            if (data.statusCode==200) {
 
 
                 $(".companybody").empty();
-                var data = JSON.parse(data);
+                var data = JSON.parse(data.data);
               
                 var rowlen = parseInt($('.companybody tr').length);
                 // console.log(data)
@@ -141,12 +141,6 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
             text-align: left;
         }
 
-      
-
-    
-
-       
-
         @media print {
            
              border:2px solid black;
@@ -156,8 +150,6 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
                
                   page-break-after: always;
 
-                  
-            
             background-color: none;
             padding: 20px;
            
@@ -166,9 +158,6 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
                 
                
             }
-
-            
-
             .no-print {
                 display: none;
             }
@@ -338,15 +327,12 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
             }
         }
       
-       
-      
+             
       
     </style>
 </head>
 
 `
-
-
     var headerContent = `<body>
     <div id="pagecontainer">
         <div class="container" id="content">
@@ -377,6 +363,7 @@ document.getElementById("Genratepdf").addEventListener("click", () => {
    
     popupwin.document.write(content1 + datadiv.innerHTML);
     popupwin.document.close();
+
     var logoImage = popupwin.document.getElementById("logo");
     popupwin.onload = function () {
         popupwin.focus();

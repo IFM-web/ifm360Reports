@@ -20,6 +20,7 @@ function SearchData() {
     let Year = $("#Year").val();
     let Client = $("#ddlClient").val();
     let Site = $("#ddlSite").val();
+    let noOfDays = new Date(Year, month, 0).getDate();
     $.ajax({
 
         url: localStorage.getItem('Myurl') + '/Reports/GetAttendanceMusterClientWise',
@@ -35,11 +36,12 @@ function SearchData() {
 
         },
         success: function (data) {
-            var data = JSON.parse(data);
+            
             console.log(data);
 
             $(".preloader").hide();
-            if (data != '[]') {
+            if (data.statusCode == 200) {
+                var data = JSON.parse(data.data);
                 $("#prindDiv").removeClass('d-none');
 
                 $(".companybody").empty();
@@ -47,7 +49,7 @@ function SearchData() {
 
                 let header1 = `<tr></th><th></th><th></th><th></th>`;
                 let header = `<tr><th>SNo</th><th>EmpCode</th><th>EmpName</th>`;
-                for (let i = 1; i <= 31; i++) {
+                for (let i = 1; i <= noOfDays; i++) {
                     let tempmonth;
                     if (month < 10) {
                         tempmonth = month.replace('0', '');
@@ -81,7 +83,7 @@ function SearchData() {
                     `
                     $(".preloader").hide();
 
-                    for (let j = 1; j <= 31; j++) {
+                    for (let j = 1; j <= noOfDays; j++) {
                         if (j < 10) {
                             j = '0' + j;
                         }
@@ -290,7 +292,7 @@ function bindsite() {
             var data = JSON.parse(data);
             var dropdown = $('#ddlSite');
             dropdown.empty();
-            dropdown.append($('<option></option>').attr('value', 'All').text('All'));
+            dropdown.append($('<option></option>').attr('value', '0').text('Select'));
             for (var i = 0; i < data.length; i++) {
 
                 dropdown.append($('<option></option>').attr('value', data[i].AsmtId).text(data[i].AsmtName));

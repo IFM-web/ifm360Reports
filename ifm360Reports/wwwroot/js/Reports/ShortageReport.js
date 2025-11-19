@@ -103,12 +103,29 @@ function SearchData() {
 
 
                 var rowlen = parseInt($('.companybody tr').length);
-                // console.log(data)
+                console.log(datatable)
                 var row = '';
                 for (var i = 0; i < datatable.length; i++) {
                  /*   var url = 'data: image/jpeg;base64,' + datatable2[i].VisitImage*/
 
-                    row += "<tr id='row" + i + "'><td style=''>" + parseInt(i + 1) + "</td><<td  style='' class='ChecklistName'>" + datatable[i].HrLocationDesc + "</td><td style=''><span class='Status'>" + datatable[i].LocationDesc + "</span></td><td style=''><span class='Remarks' id='Remarks'>" + datatable[i].ClientName + "</span></td><td style=''>" + datatable[i].AsmtName + "</td><td style=''>" + datatable[i].EmployeeNumber + "</td><td style=''>" + datatable[i].EmpName + "</td><td style=''>" + datatable[i].Date + "</td><td style=''>" + datatable[i].Status + "</td><td style=''>" + (datatable[i].Shift !== null ? datatable[i].Shift : '' )+ "</td><td style=''>" + (datatable[i].InTime !== null ? datatable[i].InTime : '') + "</td><td style=''>" + (datatable[i].OutTime !== null ? datatable[i].OutTime : '') + "</td><td style=''>" + ( datatable[i].TotalMin !== null && datatable[i].TotalMin !== undefined ? datatable[i].TotalMin : '') + "</td></tr>";
+                    row += `
+<tr id="row${i}">
+    <td>${parseInt(i + 1)}</td>
+    <td class="ChecklistName">${datatable[i].HrLocationDesc}</td>
+    <td><span class="Status">${datatable[i].LocationDesc}</span></td>
+    <td><span class="Remarks" id="Remarks">${datatable[i].ClientName}</span></td>
+    <td>${datatable[i].AsmtName}</td>
+    <td>${datatable[i].EmployeeNumber}</td>
+    <td>${datatable[i].EmpName}</td>
+    <td>${datatable[i].Designation}</td>
+    <td>${datatable[i].Date}</td>
+    <td>${datatable[i].Status}</td>
+    <td>${datatable[i].Shift !== null ? datatable[i].Shift : ''}</td>
+    <td>${datatable[i].InTime !== null ? datatable[i].InTime : ''}</td>
+    <td>${datatable[i].OutTime !== null ? datatable[i].OutTime : ''}</td>
+    <td>${datatable[i].TotalMin !== null && datatable[i].TotalMin !== undefined ? datatable[i].TotalMin : ''}</td>
+</tr>`;
+
 
 
                 }
@@ -437,7 +454,7 @@ function exportexcel(type, fn, dl) {
 
 
     var ddd = $("#txtpagename").val();
-    var elt = document.getElementById('data-tablehid');
+    var elt = document.getElementById('data-table');
     filename = ddd ;
     console.log(filename);
     console.log(elt);

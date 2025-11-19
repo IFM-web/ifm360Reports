@@ -534,8 +534,14 @@ function CreateTableFromArray(arrItems, divid) {
         th.innerHTML = col[i];
         var result = col[i].includes("Hid_") == true ? 'none' : '';
         tr.appendChild(th);
+        //th.setAttribute('style',
+        //    'font:18px Calibri;border: solid 1px #DDD;' +
+        //    'border-collapse: collapse; font-weight:bold;' +
+        //    'padding: 2px 3px; text-align: center;' +
+        //    'display:' + result + ';'
+        //);
         th.setAttribute('style',
-            'font:18px Calibri;border: solid 1px #DDD;' +
+            'Calibri;border: solid 1px #DDD;' +
             'border-collapse: collapse; font-weight:bold;' +
             'padding: 2px 3px; text-align: center;' +
             'display:' + result + ';'
@@ -551,7 +557,7 @@ function CreateTableFromArray(arrItems, divid) {
             var result = col[j].includes("Hid_") == true ? 'none' : '';
             tabCell.innerHTML = arrItems[z][col[j]];
             tabCell.setAttribute('style',
-                'font:18px Calibri;border: solid 1px #DDD;' +
+                'border: solid 1px #DDD;' +
                 'border-collapse: collapse; ' +
                 'padding: 2px 3px; text-align: center;' +
                 'display:' + result + ';'

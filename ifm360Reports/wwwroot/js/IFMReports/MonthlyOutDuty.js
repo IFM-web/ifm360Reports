@@ -37,9 +37,9 @@ function loadGridData()
         success: function (data) {
             $(".preloader").hide();
             $('#data-table tbody').empty();
-            if (data && data.length > 0) {
+            if (data.statusCode ===200) {
                 var sno = 1;
-                var Data = JSON.parse(data);
+                var Data = JSON.parse(data.data);
                 console.log(Data);
                 for (var i = 0; i < Data.length; i++) {
                     var row = '<tr>';
